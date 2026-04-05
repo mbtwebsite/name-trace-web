@@ -4,6 +4,7 @@ import time
 import threading
 import subprocess
 from pathlib import Path
+from datetime import datetime
 
 import fitz  # PyMuPDF
 from flask import Flask, render_template, request, send_file, send_from_directory
@@ -67,8 +68,12 @@ def create_preview_image(pdf_path, output_image_path):
 
     doc.close()
 
+from flask import Flask, render_template, request, send_file, send_from_directory, redirect
+@app.route("/")
+def index():
+    return redirect("/name-trace/", code=302)
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/name-trace/", methods=["GET", "POST"])
 @limiter.limit("5 per minute")
 def home():
     entered_name = ""
@@ -163,6 +168,7 @@ def home():
 
     return render_template(
         "index.html",
+        year=datetime.now().year,
         entered_name=entered_name,
         error=error,
         success=success,
