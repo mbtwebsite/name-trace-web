@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Name Trace Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            line-height: 1.5;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 280px;
+            max-width: 100%;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 16px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .error {
+            color: #b00020;
+            margin-top: 12px;
+        }
+
+        .success {
+            color: #1a7f37;
+            margin-top: 12px;
+        }
+
+        .result {
+            margin-top: 28px;
+        }
+
+        .preview-box {
+            margin-top: 16px;
+        }
+
+        .preview-box img {
+            width: 100%;
+            max-width: 700px;
+            height: auto;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .download-link {
+            display: inline-block;
+            margin-top: 16px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Name Trace Generator</h1>
+
+    <form method="POST">
+        <label for="name">Enter a name:</label><br>
+        <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Ava"
+            value="{{ entered_name }}"
+        >
+        <button type="submit" onclick="this.innerText='Generating...';">
+            Generate
+        </button>
+    </form>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    {% if success %}
+        <p class="success">{{ success }}</p>
+    {% endif %}
+
+    {% if pdf_filename or preview_filename %}
+        <div class="result">
+            {% if preview_filename %}
+                <div class="preview-box">
+                    <h2>Preview</h2>
+                    <img
+                        src="{{ url_for('preview_file', filename=preview_filename) }}"
+                        alt="Worksheet preview"
+                    >
+                </div>
+            {% endif %}
+
+            {% if pdf_filename %}
+                <p>
+                    <a class="download-link" href="{{ url_for('download_file', filename=pdf_filename) }}">
+                        Download your PDF
+                    </a>
+                </p>
+            {% endif %}
+        </div>
+    {% endif %}
+</body>
+</html>
