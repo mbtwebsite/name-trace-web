@@ -152,4 +152,5 @@ def download_file(filename):
 
 if __name__ == "__main__":
     GENERATED_DIR.mkdir(exist_ok=True)
-    app.run(debug=True)
+    import os
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
