@@ -3,3 +3,4 @@ Flask-Limiter
 gunicorn
 reportlab
 PyMuPDF
+requests

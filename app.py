@@ -1,3 +1,4 @@
+import requests
 import re
 import time
 import threading
@@ -8,6 +9,9 @@ import fitz  # PyMuPDF
 from flask import Flask, render_template, request, send_file, send_from_directory
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+
+import os
+TURNSTILE_SECRET_KEY = os.environ.get("TURNSTILE_SECRET_KEY")
 
 app = Flask(__name__)
 
@@ -74,6 +78,42 @@ def home():
     preview_filename = ""
 
     if request.method == "POST":
+
+        token = request.form.get("cf-turnstile-response")
+
+        if not token:
+            error = "Security check failed. Please try again."
+            return render_template(
+                "index.html",
+                entered_name=entered_name,
+                error=error,
+                success=success,
+                pdf_filename=pdf_filename,
+                preview_filename=preview_filename
+            )
+
+        verify_response = requests.post(
+            "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+            data={
+                "secret": TURNSTILE_SECRET_KEY,
+                "response": token,
+            },
+            timeout=10,
+        )
+
+        turnstile_result = verify_response.json()
+
+        if not turnstile_result.get("success"):
+            error = "Security check failed. Please try again."
+            return render_template(
+                "index.html",
+                entered_name=entered_name,
+                error=error,
+                success=success,
+                pdf_filename=pdf_filename,
+                preview_filename=preview_filename
+            )
+
         cleanup_old_files(GENERATED_DIR)
 
         entered_name = request.form.get("name", "").strip()
