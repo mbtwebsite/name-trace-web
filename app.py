@@ -7,7 +7,7 @@ from pathlib import Path
 from datetime import datetime
 
 import fitz  # PyMuPDF
-from flask import Flask, render_template, request, send_file, send_from_directory
+from flask import Flask, render_template, request, send_file, send_from_directory, redirect, make_response
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
@@ -68,10 +68,11 @@ def create_preview_image(pdf_path, output_image_path):
 
     doc.close()
 
-from flask import Flask, render_template, request, send_file, send_from_directory, redirect
+
 @app.route("/")
 def index():
     return redirect("/name-trace/", code=302)
+
 
 @app.route("/name-trace/", methods=["GET", "POST"])
 @limiter.limit("5 per minute")
@@ -88,85 +89,70 @@ def home():
 
         if not token:
             error = "Security check failed. Please try again."
-            return render_template(
-                "index.html",
-                entered_name=entered_name,
-                error=error,
-                success=success,
-                pdf_filename=pdf_filename,
-                preview_filename=preview_filename
-            )
-
-        verify_response = requests.post(
-            "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-            data={
-                "secret": TURNSTILE_SECRET_KEY,
-                "response": token,
-            },
-            timeout=10,
-        )
-
-        turnstile_result = verify_response.json()
-
-        if not turnstile_result.get("success"):
-            error = "Security check failed. Please try again."
-            return render_template(
-                "index.html",
-                entered_name=entered_name,
-                error=error,
-                success=success,
-                pdf_filename=pdf_filename,
-                preview_filename=preview_filename
-            )
-
-        cleanup_old_files(GENERATED_DIR)
-
-        entered_name = request.form.get("name", "").strip()
-
-        if not entered_name:
-            error = "Please enter a name."
-        elif not is_valid_name(entered_name):
-            error = "Only letters, spaces, hyphens, apostrophes, max 20 characters."
         else:
-            try:
-                result = subprocess.run(
-                    ["python3", "name_trace.py", entered_name],
-                    capture_output=True,
-                    text=True,
-                    check=True
-                )
+            verify_response = requests.post(
+                "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+                data={
+                    "secret": TURNSTILE_SECRET_KEY,
+                    "response": token,
+                },
+                timeout=10,
+            )
 
-                print("STDOUT:", result.stdout)
-                print("STDERR:", result.stderr)
+            turnstile_result = verify_response.json()
 
-                slug = slugify_name(entered_name)
-                pdf_filename = f"name-trace-{slug}.pdf"
-                preview_filename = f"name-trace-{slug}.png"
+            if not turnstile_result.get("success"):
+                error = "Security check failed. Please try again."
+            else:
+                cleanup_old_files(GENERATED_DIR)
 
-                pdf_path = GENERATED_DIR / pdf_filename
-                preview_path = GENERATED_DIR / preview_filename
+                entered_name = request.form.get("name", "").strip()
 
-                if pdf_path.exists():
-                    create_preview_image(pdf_path, preview_path)
-                    success = f'Worksheet generated for "{entered_name}".'
+                if not entered_name:
+                    error = "Please enter a name."
+                elif not is_valid_name(entered_name):
+                    error = "Only letters, spaces, hyphens, apostrophes, max 20 characters."
                 else:
-                    error = "The script ran, but no PDF was found."
-                    pdf_filename = ""
-                    preview_filename = ""
+                    try:
+                        result = subprocess.run(
+                            ["python3", "name_trace.py", entered_name],
+                            capture_output=True,
+                            text=True,
+                            check=True
+                        )
 
-                if not preview_path.exists():
-                    preview_filename = ""
+                        print("STDOUT:", result.stdout)
+                        print("STDERR:", result.stderr)
 
-            except subprocess.CalledProcessError as e:
-                error = "There was a problem generating the worksheet."
-                print("STDOUT:", e.stdout)
-                print("STDERR:", e.stderr)
+                        slug = slugify_name(entered_name)
+                        pdf_filename = f"name-trace-{slug}.pdf"
+                        preview_filename = f"name-trace-{slug}.png"
 
-            except Exception as e:
-                error = f"Preview generation failed: {e}"
-                print("ERROR:", e)
+                        pdf_path = GENERATED_DIR / pdf_filename
+                        preview_path = GENERATED_DIR / preview_filename
 
-    return render_template(
+                        if pdf_path.exists():
+                            create_preview_image(pdf_path, preview_path)
+                            success = f'Worksheet generated for "{entered_name}".'
+                        else:
+                            error = "The script ran, but no PDF was found."
+                            pdf_filename = ""
+                            preview_filename = ""
+
+                        if not preview_path.exists():
+                            preview_filename = ""
+
+                    except subprocess.CalledProcessError as e:
+                        error = "There was a problem generating the worksheet."
+                        print("STDOUT:", e.stdout)
+                        print("STDERR:", e.stderr)
+
+                    except Exception as e:
+                        error = f"Preview generation failed: {e}"
+                        print("ERROR:", e)
+
+    # ✅ THIS IS THE IMPORTANT PART (no-cache headers)
+    response = make_response(render_template(
         "index.html",
         year=datetime.now().year,
         entered_name=entered_name,
@@ -174,7 +160,13 @@ def home():
         success=success,
         pdf_filename=pdf_filename,
         preview_filename=preview_filename
-    )
+    ))
+
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+
+    return response
 
 
 @app.route("/preview/<path:filename>")
@@ -198,5 +190,4 @@ def download_file(filename):
 
 if __name__ == "__main__":
     GENERATED_DIR.mkdir(exist_ok=True)
-    import os
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
