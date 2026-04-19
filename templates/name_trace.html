@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Name Trace Generator</title>
+
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f3f3f3;
+            color: #222;
+        }
+
+        .container {
+            width: min(1100px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        /* ===== Header ===== */
+        .site-header {
+            background: #4b008f;
+            color: white;
+            padding: 18px 0;
+            border-top: 6px solid #ff7a00;
+        }
+
+        .site-header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .brand img {
+            height: 78px;
+            width: auto;
+            display: block;
+        }
+
+        .brand-title {
+            font-size: 2.05rem;
+            font-weight: 800;
+            color: #ffe600;
+            line-height: 1.1;
+        }
+
+        .brand-tagline {
+            font-size: 0.95rem;
+            color: #76ff2f;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 22px;
+            flex-wrap: wrap;
+        }
+
+        .nav a {
+            color: #4deaff;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== Title Bar ===== */
+        .title-bar {
+            background: #fff200;
+            border-top: 4px solid #ff7a00;
+            border-bottom: 1px solid #ddd;
+            padding: 14px 0;
+        }
+
+        .title-bar h1 {
+            margin: 0;
+            font-size: 2.1rem;
+            font-weight: 800;
+            color: #1f1f1f;
+        }
+
+        /* ===== Main Content ===== */
+        .page-wrap {
+            padding: 44px 0 30px;
+        }
+
+        .intro-section {
+            background: #ffffff;
+            border-bottom: 1px solid #ddd;
+            padding: 18px 0;
+        }
+
+        .subtitle {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #333;
+            max-width: 720px;
+        }
+
+        .main-layout {
+            display: flex;
+            gap: 44px;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .left-panel {
+            flex: 0 0 380px;
+            max-width: 380px;
+        }
+
+        .right-panel {
+            flex: 1;
+            max-width: 620px;
+        }
+
+        form {
+            margin-top: 10px;
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: inline-block;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            max-width: 360px;
+            padding: 12px 12px;
+            font-size: 16px;
+            border: 1px solid #999;
+            border-radius: 2px;
+            box-sizing: border-box;
+            background: #fff;
+        }
+
+        .cf-turnstile {
+            margin-top: 12px;
+            margin-bottom: 12px;
+        }
+
+        button {
+            padding: 12px 22px;
+            font-size: 16px;
+            cursor: pointer;
+            border: 1px solid #888;
+            background: #f7f7f7;
+            color: #222;
+            border-radius: 2px;
+        }
+
+        button:hover {
+            background: #efefef;
+        }
+
+        .error {
+            color: #b00020;
+            margin-top: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .success {
+            color: #1a7f37;
+            margin-top: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .download-link {
+            display: inline-block;
+            margin-top: 18px;
+            font-weight: 700;
+            color: #4b008f;
+            text-decoration: none;
+        }
+
+        .download-link:hover {
+            text-decoration: underline;
+        }
+
+        .preview-box h2 {
+            margin-top: 0;
+            margin-bottom: 14px;
+            font-size: 1.25rem;
+            color: #1f1f1f;
+        }
+
+        .preview-box img {
+            display: block;
+            width: 100%;
+            max-width: 620px;
+            height: auto;
+            border: 1px solid #cfcfcf;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            background: #fff;
+        }
+
+        /* ===== Footer ===== */
+        .site-footer {
+            background: #ffffff;
+            border-top: 1px solid #ddd;
+            margin-top: 40px;
+            padding: 28px 0;
+        }
+
+        .footer-inner {
+            width: min(1100px, calc(100% - 40px));
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            color: #3d485c;
+            font-size: 14px;
+        }
+
+        .footer-inner a {
+            color: #3d485c;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-inner a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 900px) {
+            .main-layout {
+                flex-direction: column;
+            }
+
+            .left-panel,
+            .right-panel {
+                max-width: 100%;
+                flex: 1 1 auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .site-header-inner {
+                align-items: flex-start;
+            }
+
+            .brand {
+                align-items: flex-start;
+            }
+
+            .brand img {
+                height: 64px;
+            }
+
+            .brand-title {
+                font-size: 1.7rem;
+            }
+
+            .nav {
+                gap: 14px;
+            }
+
+            .title-bar h1 {
+                font-size: 1.8rem;
+            }
+
+            .page-wrap {
+                padding-top: 28px;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6792544063337994"
+     crossorigin="anonymous"></script>
+     <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MYKH0JQJV7"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-MYKH0JQJV7');
+    </script>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container site-header-inner">
+            <a href="https://free4classrooms.com" class="brand">
+                <img src="/static/free4classrooms-logo.png" alt="Free4Classrooms logo">
+                <div>
+                    <div class="brand-title">Free4Classrooms.com</div>
+                    <div class="brand-tagline">Free Printable Worksheets for Kindergarten &amp; Beyond</div>
+                </div>
+            </a>
+
+            <nav class="nav">
+                <a href="https://free4classrooms.com">Home</a>
+                <a href="https://free4classrooms.com/math/">Math</a>
+                <a href="https://free4classrooms.com/reading-worksheets/">Reading</a>
+                <a href="https://free4classrooms.com/free-printable-sight-word-worksheets/">Sight Words</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="title-bar">
+        <div class="container">
+            <h1>Name Trace Generator</h1>
+        </div>
+    </div>
+    
+    <div class="intro-section">
+        <div class="container">
+             <p class="subtitle">
+                Create a free printable name tracing worksheet in seconds. Perfect for preschool, kindergarten, and early handwriting practice.
+             </p>
+        </div>
+    </div>
+
+    <main class="page-wrap">
+        <div class="container">
+            <div class="main-layout">
+
+                <div class="left-panel">
+                    <form method="POST" id="form">
+                        <label for="name">Enter a name:</label><br>
+
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            placeholder="Ava"
+                            value="{{ entered_name }}"
+                        >
+
+                        <div class="cf-turnstile" data-sitekey="0x4AAAAAAC1CCmRmusRfWr9u" ></div>
+
+                        <button type="submit" id="submit-btn">
+                            Generate
+                        </button>
+                    </form>
+
+                    {% if error %}
+                        <p class="error">{{ error }}</p>
+                    {% endif %}
+
+                    {% if success %}
+                        <p class="success">{{ success }}</p>
+                    {% endif %}
+
+                    {% if pdf_filename %}
+                        <p>
+                            <a class="download-link" href="{{ url_for('download_file', filename=pdf_filename) }}">
+                                Download your PDF
+                            </a>
+                        </p>
+                    {% endif %}
+                </div>
+
+                <div class="right-panel">
+                    {% if preview_filename %}
+                        <div class="preview-box">
+                            <h2>Your Worksheet Preview</h2>
+                            <img
+                                src="{{ url_for('preview_file', filename=preview_filename) }}"
+                                alt="Generated worksheet preview"
+                            >
+                        </div>
+                    {% else %}
+                        <div class="preview-box">
+                            <h2>Example Worksheet</h2>
+                            <img
+                                src="/static/example-name-trace.png"
+                                alt="Example worksheet preview"
+                            >
+                        </div>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div>© {{ year }} Free4Classrooms.com</div>
+            <div>
+                <a href="https://free4classrooms.com/terms-of-use/">Terms of Use</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById("form").addEventListener("submit", function(e) {
+        const btn = document.getElementById("submit-btn");
+         btn.innerText = "Generating...";
+        });
+    </script>
+</body>
+</html>
