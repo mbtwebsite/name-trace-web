@@ -106,21 +106,21 @@ def generate_name_trace_pdf(name: str) -> Path:
 
     page_width = 612
     center_x = page_width / 2
-    max_word_width = 470
+    max_word_width = 500
 
     draw_page_frame(c)
 
     # Section labels
     draw_heading(c, "Write.", 28, 750, fonts["heading"], 24)
     draw_heading(c, "Trace it.", 28, 486, fonts["heading"], 24)
-    draw_heading(c, "Color it.", 40, 222, fonts["heading"], 24)
+    draw_heading(c, "Color it.", 40, 235, fonts["heading"], 24)
 
     # Top section: directional/stroke-order font
     top_size = fit_font_size(
         name,
         fonts["directional"],
         max_word_width,
-        [120, 112, 104, 96, 88, 80, 72, 64]
+        [136, 128, 120, 112, 104, 96, 88, 80, 72]
     )
     draw_centered_word(c, name, fonts["directional"], top_size, center_x, 600)
 
@@ -129,7 +129,7 @@ def generate_name_trace_pdf(name: str) -> Path:
         name,
         fonts["dotted"],
         max_word_width,
-        [100, 92, 84, 76, 68, 60, 54]
+        [114, 106, 98, 90, 82, 74, 66, 58]
     )
     draw_centered_word(c, name, fonts["dotted"], middle_size, center_x, 350)
 
@@ -138,7 +138,7 @@ def generate_name_trace_pdf(name: str) -> Path:
         name,
         fonts["outline"],
         max_word_width,
-        [120, 112, 104, 96, 88, 80, 72, 64]
+        [136, 128, 120, 112, 104, 96, 88, 80, 72]
     )
     draw_centered_word(c, name, fonts["outline"], bottom_size, center_x, 95)
 

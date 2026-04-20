@@ -1,0 +1,6 @@
+cat > .gitignore <<'EOF'
+generated/
+*.pdf
+*.png
+.DS_Store
+EOF
