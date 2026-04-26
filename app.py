@@ -14,13 +14,13 @@ from flask import (
     request,
     send_file,
     send_from_directory,
-    redirect,
     make_response,
 )
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
 TURNSTILE_SECRET_KEY = os.environ.get("TURNSTILE_SECRET_KEY")
+TURNSTILE_SITE_KEY = os.environ.get("TURNSTILE_SITE_KEY", "")
 
 app = Flask(__name__)
 limiter = Limiter(get_remote_address, app=app, default_limits=["10 per minute"])
@@ -28,14 +28,13 @@ limiter = Limiter(get_remote_address, app=app, default_limits=["10 per minute"])
 BASE_DIR = Path(__file__).resolve().parent
 GENERATED_DIR = BASE_DIR / "generated"
 
-# -------------------------------------------------
-# CONFIG: adjust these 4 names if your files differ
-# -------------------------------------------------
 NAME_TRACE_TEMPLATE = "name_trace.html"
 COLOR_TRACE_TEMPLATE = "color_trace.html"
+ADDITION_TEMPLATE = "addition_generator.html"
 
 NAME_TRACE_SCRIPT = "name_trace.py"
 COLOR_TRACE_SCRIPT = "color_trace.py"
+ADDITION_SCRIPT = "addition_generator.py"
 
 
 def is_valid_text(value: str):
@@ -51,6 +50,8 @@ def slugify_text(value: str):
 
 def cleanup_old_files(folder: Path, max_age_seconds: int = 3600):
     now = time.time()
+    folder.mkdir(exist_ok=True)
+
     for file in folder.glob("*"):
         if file.is_file():
             try:
@@ -86,11 +87,6 @@ def create_preview_image(pdf_path: Path, output_image_path: Path):
 
 
 def verify_turnstile() -> bool:
-    """
-    Verifies Cloudflare Turnstile on POST.
-    If no TURNSTILE_SECRET_KEY is set, verification is skipped
-    so local testing still works.
-    """
     if not TURNSTILE_SECRET_KEY:
         return True
 
@@ -184,6 +180,7 @@ def render_generator_page(template_name: str, generator_script: str):
             success=success,
             pdf_filename=pdf_filename,
             preview_filename=preview_filename,
+            turnstile_site_key=TURNSTILE_SITE_KEY,
         )
     )
 
@@ -192,6 +189,110 @@ def render_generator_page(template_name: str, generator_script: str):
     response.headers["Expires"] = "0"
 
     return response
+
+
+def render_addition_generator_page():
+    error = ""
+    success = ""
+    pdf_filename = ""
+    preview_filename = ""
+
+    digits = request.form.get("digits", "1") if request.method == "POST" else "1"
+    regrouping = request.form.get("regrouping", "mixed") if request.method == "POST" else "mixed"
+    count = request.form.get("count", "20") if request.method == "POST" else "20"
+    image_style = request.form.get("image_style", "bw") if request.method == "POST" else "bw"
+
+    if request.method == "POST":
+        cleanup_old_files(GENERATED_DIR)
+
+        if not verify_turnstile():
+            error = "Security check failed. Please try again."
+        elif digits not in {"1", "2"}:
+            error = "Please choose 1-digit or 2-digit addition."
+        elif regrouping not in {"mixed", "no", "yes"}:
+            error = "Please choose a valid regrouping option."
+        elif count != "20":
+            error = "This first version supports 20 problems only."
+        elif image_style not in {"bw", "color"}:
+            error = "Please choose black and white or color."
+        else:
+            try:
+                if digits == "1":
+                    regrouping = "mixed"
+
+                timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+                pdf_filename = f"addition-{digits}-digit-{regrouping}-{image_style}-{count}-{timestamp}.pdf"
+                preview_filename = pdf_filename.replace(".pdf", ".png")
+
+                result = subprocess.run(
+                    [
+                        "python3",
+                        ADDITION_SCRIPT,
+                        "--digits",
+                        digits,
+                        "--regrouping",
+                        regrouping,
+                        "--count",
+                        count,
+                        "--image-style",
+                        image_style,
+                        "--filename",
+                        pdf_filename,
+                    ],
+                    cwd=str(BASE_DIR),
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                )
+
+                print("STDOUT:", result.stdout)
+                print("STDERR:", result.stderr)
+
+                pdf_path = GENERATED_DIR / pdf_filename
+                preview_path = GENERATED_DIR / preview_filename
+
+                if pdf_path.exists():
+                    create_preview_image(pdf_path, preview_path)
+                    success = "Addition worksheet generated."
+                else:
+                    error = "The script ran, but no PDF was found."
+                    pdf_filename = ""
+                    preview_filename = ""
+
+                if not preview_path.exists():
+                    preview_filename = ""
+
+            except subprocess.CalledProcessError as e:
+                error = "There was a problem generating the addition worksheet."
+                print("STDOUT:", e.stdout)
+                print("STDERR:", e.stderr)
+
+            except Exception as e:
+                error = f"Preview generation failed: {e}"
+                print("ERROR:", e)
+
+    response = make_response(
+        render_template(
+            ADDITION_TEMPLATE,
+            year=datetime.now().year,
+            digits=digits,
+            regrouping=regrouping,
+            count=count,
+            image_style=image_style,
+            error=error,
+            success=success,
+            pdf_filename=pdf_filename,
+            preview_filename=preview_filename,
+            turnstile_site_key=TURNSTILE_SITE_KEY,
+        )
+    )
+
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+
+    return response
+
 
 @app.route("/")
 def home():
@@ -208,6 +309,12 @@ def name_trace():
 @limiter.limit("5 per minute")
 def color_trace():
     return render_generator_page(COLOR_TRACE_TEMPLATE, COLOR_TRACE_SCRIPT)
+
+
+@app.route("/addition-generator/", methods=["GET", "POST"])
+@limiter.limit("5 per minute")
+def addition_generator():
+    return render_addition_generator_page()
 
 
 @app.route("/preview/<path:filename>")
