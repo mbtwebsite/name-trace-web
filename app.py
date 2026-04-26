@@ -6,7 +6,7 @@ import subprocess
 from pathlib import Path
 from datetime import datetime
 
-import fitz  # PyMuPDF
+import fitz
 import requests
 from flask import (
     Flask,
@@ -31,10 +31,12 @@ GENERATED_DIR = BASE_DIR / "generated"
 NAME_TRACE_TEMPLATE = "name_trace.html"
 COLOR_TRACE_TEMPLATE = "color_trace.html"
 ADDITION_TEMPLATE = "addition_generator.html"
+MULTIPLICATION_TEMPLATE = "multiplication.html"
 
 NAME_TRACE_SCRIPT = "name_trace.py"
 COLOR_TRACE_SCRIPT = "color_trace.py"
 ADDITION_SCRIPT = "addition_generator.py"
+MULTIPLICATION_SCRIPT = "multiplication_generator.py"
 
 
 def is_valid_text(value: str):
@@ -293,6 +295,106 @@ def render_addition_generator_page():
 
     return response
 
+
+def render_multiplication_generator_page():
+    error = ""
+    success = ""
+    pdf_filename = ""
+    preview_filename = ""
+
+    fact_number = request.form.get("fact_number", "mixed") if request.method == "POST" else "mixed"
+    image_style = request.form.get("image_style", "bw") if request.method == "POST" else "bw"
+    layout = request.form.get("layout", "horizontal") if request.method == "POST" else "horizontal"
+    count = "24"
+
+    valid_fact_numbers = {"mixed"} | {str(i) for i in range(13)}
+
+    if request.method == "POST":
+        cleanup_old_files(GENERATED_DIR)
+
+        if not verify_turnstile():
+            error = "Security check failed. Please try again."
+        elif fact_number not in valid_fact_numbers:
+            error = "Please choose mixed facts or a number from 0 to 12."
+        elif image_style not in {"bw", "color"}:
+            error = "Please choose black and white or color."
+        elif layout not in {"horizontal", "vertical"}:
+            error = "Please choose horizontal or vertical layout."
+        else:
+            try:
+                timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+                pdf_filename = f"multiplication-facts-{fact_number}-{layout}-{image_style}-{count}-{timestamp}.pdf"
+                preview_filename = pdf_filename.replace(".pdf", ".png")
+
+                result = subprocess.run(
+                    [
+                        "python3",
+                        MULTIPLICATION_SCRIPT,
+                        "--fact-number",
+                        fact_number,
+                        "--count",
+                        count,
+                        "--image-style",
+                        image_style,
+                        "--layout",
+                        layout,
+                        "--filename",
+                        pdf_filename,
+                    ],
+                    cwd=str(BASE_DIR),
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                )
+
+                print("STDOUT:", result.stdout)
+                print("STDERR:", result.stderr)
+
+                pdf_path = GENERATED_DIR / pdf_filename
+                preview_path = GENERATED_DIR / preview_filename
+
+                if pdf_path.exists():
+                    create_preview_image(pdf_path, preview_path)
+                    success = "Multiplication facts worksheet generated."
+                else:
+                    error = "The script ran, but no PDF was found."
+                    pdf_filename = ""
+                    preview_filename = ""
+
+                if not preview_path.exists():
+                    preview_filename = ""
+
+            except subprocess.CalledProcessError as e:
+                error = "There was a problem generating the multiplication worksheet."
+                print("STDOUT:", e.stdout)
+                print("STDERR:", e.stderr)
+
+            except Exception as e:
+                error = f"Preview generation failed: {e}"
+                print("ERROR:", e)
+
+    response = make_response(
+        render_template(
+            MULTIPLICATION_TEMPLATE,
+            year=datetime.now().year,
+            fact_number=fact_number,
+            image_style=image_style,
+            layout=layout,
+            error=error,
+            success=success,
+            pdf_filename=pdf_filename,
+            preview_filename=preview_filename,
+            turnstile_site_key=TURNSTILE_SITE_KEY,
+        )
+    )
+
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+
+    return response
+
+
 def render_subtraction_generator_page():
     error = ""
     success = ""
@@ -412,10 +514,18 @@ def color_trace():
 def addition_generator():
     return render_addition_generator_page()
 
+
+@app.route("/multiplication-generator/", methods=["GET", "POST"])
+@limiter.limit("5 per minute")
+def multiplication_generator():
+    return render_multiplication_generator_page()
+
+
 @app.route("/subtraction-generator/", methods=["GET", "POST"])
 @limiter.limit("5 per minute")
 def subtraction_generator():
     return render_subtraction_generator_page()
+
 
 @app.route("/preview/<path:filename>")
 def preview_file(filename):
