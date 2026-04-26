@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Addition Worksheet Generator</title>
 
-    {% if turnstile_site_key %}
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-    {% endif %}
 
     <style>
         body {
@@ -417,9 +415,7 @@
                         <option value="color" {% if image_style == "color" %}selected{% endif %}>Color</option>
                     </select>
 
-                    {% if turnstile_site_key %}
-                    <div class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}"></div>
-                    {% endif %}
+                    <div class="cf-turnstile" data-sitekey="0x4AAAAAAC1CCmRmusRfWr9u"></div>
 
                     <button type="submit" id="submit-btn">Generate Worksheet</button>
                 </form>
