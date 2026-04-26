@@ -382,7 +382,6 @@
             Create a free printable addition worksheet in seconds. Choose 1-digit or 2-digit addition,
             select regrouping options for 2-digit practice, and download a clean worksheet PDF.
         </p>
-        <p>Turnstile key test: {{ turnstile_site_key }}</p>
     </div>
 </div>
 
@@ -459,8 +458,12 @@
                     </div>
                 {% else %}
                     <div class="preview-box">
-                        <h2>Generate an Addition Worksheet</h2>
-                        <p>Choose your worksheet options on the left, then generate a printable PDF.</p>
+                        <h2>Example Addition Worksheet</h2>
+                        <p>This worksheet includes addition problems for practice, with optional regrouping and clean formatting for printing.</p>
+                        <img
+                            src="/static/example-2-digit-addition.png"
+                            alt="Example addition worksheet preview"
+                        >
                     </div>
                 {% endif %}
             </div>
