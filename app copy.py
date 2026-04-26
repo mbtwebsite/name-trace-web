@@ -293,102 +293,6 @@ def render_addition_generator_page():
 
     return response
 
-def render_subtraction_generator_page():
-    error = ""
-    success = ""
-    pdf_filename = ""
-    preview_filename = ""
-
-    digits = request.form.get("digits", "1") if request.method == "POST" else "1"
-    regrouping = request.form.get("regrouping", "mixed") if request.method == "POST" else "mixed"
-    image_style = request.form.get("image_style", "bw") if request.method == "POST" else "bw"
-
-    if request.method == "POST":
-        cleanup_old_files(GENERATED_DIR)
-
-        if not verify_turnstile():
-            error = "Security check failed. Please try again."
-        elif digits not in {"1", "2"}:
-            error = "Please choose 1-digit or 2-digit subtraction."
-        elif regrouping not in {"mixed", "no", "yes"}:
-            error = "Please choose a valid regrouping option."
-        elif image_style not in {"bw", "color"}:
-            error = "Please choose black and white or color."
-        else:
-            try:
-                if digits == "1":
-                    regrouping = "mixed"
-
-                timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-                pdf_filename = f"subtraction-{digits}-digit-{regrouping}-{image_style}-{timestamp}.pdf"
-                preview_filename = pdf_filename.replace(".pdf", ".png")
-
-                result = subprocess.run(
-                    [
-                        "python3",
-                        "subtraction_generator.py",
-                        "--digits",
-                        digits,
-                        "--regrouping",
-                        regrouping,
-                        "--image-style",
-                        image_style,
-                        "--filename",
-                        pdf_filename,
-                    ],
-                    cwd=str(BASE_DIR),
-                    capture_output=True,
-                    text=True,
-                    check=True,
-                )
-
-                print("STDOUT:", result.stdout)
-                print("STDERR:", result.stderr)
-
-                pdf_path = GENERATED_DIR / pdf_filename
-                preview_path = GENERATED_DIR / preview_filename
-
-                if pdf_path.exists():
-                    create_preview_image(pdf_path, preview_path)
-                    success = "Subtraction worksheet generated."
-                else:
-                    error = "The script ran, but no PDF was found."
-                    pdf_filename = ""
-                    preview_filename = ""
-
-                if not preview_path.exists():
-                    preview_filename = ""
-
-            except subprocess.CalledProcessError as e:
-                error = "There was a problem generating the subtraction worksheet."
-                print("STDOUT:", e.stdout)
-                print("STDERR:", e.stderr)
-
-            except Exception as e:
-                error = f"Preview generation failed: {e}"
-                print("ERROR:", e)
-
-    response = make_response(
-        render_template(
-            "subtraction.html",
-            year=datetime.now().year,
-            digits=digits,
-            regrouping=regrouping,
-            image_style=image_style,
-            error=error,
-            success=success,
-            pdf_filename=pdf_filename,
-            preview_filename=preview_filename,
-            turnstile_site_key=TURNSTILE_SITE_KEY,
-        )
-    )
-
-    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "0"
-
-    return response
-
 
 @app.route("/")
 def home():
@@ -412,10 +316,6 @@ def color_trace():
 def addition_generator():
     return render_addition_generator_page()
 
-@app.route("/subtraction-generator/", methods=["GET", "POST"])
-@limiter.limit("5 per minute")
-def subtraction_generator():
-    return render_subtraction_generator_page()
 
 @app.route("/preview/<path:filename>")
 def preview_file(filename):
