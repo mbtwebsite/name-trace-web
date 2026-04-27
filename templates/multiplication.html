@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multiplication Facts Worksheet Generator</title>
+    <title>Multiplication Worksheet Generator | Free Printable Multiplication Worksheets</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
 
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
@@ -285,6 +286,24 @@
             background: #4b008f;
         }
 
+        .generator-links {
+            margin-top: 14px;
+            font-size: 0.96rem;
+            color: #333;
+            line-height: 1.55;
+            text-align: center;
+        }
+
+        .generator-links a {
+            color: #4b008f;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .generator-links a:hover {
+            text-decoration: underline;
+        }
+
         @media (max-width: 900px) {
             .main-layout {
                 flex-direction: column;
@@ -351,7 +370,7 @@
 
         <nav class="nav">
             <a href="https://free4classrooms.com">Home</a>
-            <a href="https://free4classrooms.com/math/">Math</a>
+            <a href="https://free4classrooms.com/free-math-worksheets/">Math</a>
             <a href="https://free4classrooms.com/reading-worksheets/">Reading</a>
             <a href="https://free4classrooms.com/free-printable-sight-word-worksheets/">Sight Words</a>
         </nav>
@@ -360,16 +379,28 @@
 
 <div class="title-bar">
     <div class="container">
-        <h1>Multiplication Facts Worksheet Generator</h1>
+        <h1>Multiplication Worksheet Generator (Free Printable Worksheets)</h1>
     </div>
 </div>
 
 <div class="intro-section">
     <div class="container">
         <p class="subtitle">
-            Create a free printable multiplication facts worksheet for numbers 0–12. Choose one times table or mixed facts,
-            select a black and white or color image style, and download a clean worksheet PDF.
+            Create free printable <strong>multiplication worksheets</strong> instantly with this multiplication worksheet generator.
+            Choose basic multiplication facts or larger numbers, select worksheet layout options, and download a clean,
+            classroom-ready PDF for math practice at home or school.
+            You can also visit our
+            <a href="https://practice.free4classrooms.com/">Worksheet Generator Hub</a>
+            to create more free worksheets.
         </p>
+    </div>
+    <div class="generator-links">
+        <strong>More worksheet generators:</strong>
+        <a href="https://practice.free4classrooms.com/">All Worksheet Generators</a> |
+        <a href="/addition-generator">Addition Worksheet Generator</a> |
+        <a href="/subtraction-generator">Subtraction Worksheet Generator</a> |
+        <a href="/multiplication-generator">Multiplication Worksheet Generator</a> |
+        <a href="/division-generator">Division Worksheet Generator</a>
     </div>
 </div>
 
