@@ -414,7 +414,7 @@
                         <option value="color" {% if image_style == "color" %}selected{% endif %}>Color</option>
                     </select>
 
-                    <div class="cf-turnstile" data-sitekey="0x4AAAAAAC1CCmRmusRfWr9u"></div>
+                    <div class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}"></div>
 
                     <button type="submit" id="submit-btn">Generate Worksheet</button>
                 </form>
@@ -458,12 +458,8 @@
                     </div>
                 {% else %}
                     <div class="preview-box">
-                        <h2>Example Addition Worksheet</h2>
-                        <p>This worksheet includes addition problems for practice, with optional regrouping and clean formatting for printing.</p>
-                        <img
-                            src="/static/example-2-digit-addition.png?v=2"
-                            alt="Example addition worksheet preview"
-                        >
+                        <h2>Generate an Addition Worksheet</h2>
+                        <p>Choose your worksheet options on the left, then generate a printable PDF.</p>
                     </div>
                 {% endif %}
             </div>
