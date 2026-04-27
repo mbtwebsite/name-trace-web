@@ -27,7 +27,7 @@ PROBLEM_FONT_PATH = FONTS_DIR / "KGNeatlyPrintedSpaced.ttf"
 
 COLOR_IMAGE_PATH = IMAGES_DIR / "Math_Stars_Color.png"
 BW_IMAGE_PATH = IMAGES_DIR / "Math_Stars_BW.png"
-LONG_DIVISION_IMAGE_PATH = IMAGES_DIR / "long_division_3digit.png"
+LONG_DIVISION_IMAGE_PATH = BASE_DIR / "static" / "long_division_3digit.png"
 
 TITLE_FONT_NAME = "KGRedHands"
 PROBLEM_FONT_NAME = "KGNeatlyPrintedSpaced"
