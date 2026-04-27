@@ -328,7 +328,7 @@ def create_pdf(
     title = "Division Facts"
 
     if layout == "long":
-        subtitle = "Solve each long division problem (no remainders)."
+        subtitle = "Solve each long division problem (no remainders)"
     elif fact_number == "mixed":
         subtitle = "Solve each division equation below."
     else:
