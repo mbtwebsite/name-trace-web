@@ -330,9 +330,9 @@ def create_pdf(
     if layout == "long":
         subtitle = "Solve each long division problem (no remainders)"
     elif fact_number == "mixed":
-        subtitle = "Solve each division equation below."
+        subtitle = "Solve each division equation below"
     else:
-        subtitle = f"Divide by {fact_number}s."
+        subtitle = f"Divide by {fact_number}s"
 
     c = canvas.Canvas(str(output_path), pagesize=letter)
 
