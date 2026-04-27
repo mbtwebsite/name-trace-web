@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Division Facts Worksheet Generator</title>
+
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f3f3f3;
+            color: #222;
+        }
+
+        .container {
+            width: min(1100px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        .site-header {
+            background: #4b008f;
+            color: white;
+            padding: 18px 0;
+            border-top: 6px solid #ff7a00;
+        }
+
+        .site-header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .brand img {
+            height: 78px;
+        }
+
+        .brand-title {
+            font-size: 2.05rem;
+            font-weight: 800;
+            color: #ffe600;
+        }
+
+        .brand-tagline {
+            font-size: 0.95rem;
+            color: #76ff2f;
+            font-weight: 700;
+        }
+
+        .nav {
+            display: flex;
+            gap: 22px;
+        }
+
+        .nav a {
+            color: #4deaff;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .title-bar {
+            background: #fff200;
+            border-top: 4px solid #ff7a00;
+            padding: 14px 0;
+        }
+
+        .title-bar h1 {
+            margin: 0;
+            font-size: 2.1rem;
+            font-weight: 800;
+        }
+
+        .intro-section {
+            background: #ffffff;
+            padding: 18px 0;
+        }
+
+        .subtitle {
+            margin: 0;
+            font-size: 1rem;
+            color: #333;
+            max-width: 820px;
+        }
+
+        .page-wrap {
+            padding: 44px 0 30px;
+        }
+
+        .main-layout {
+            display: flex;
+            gap: 44px;
+        }
+
+        .left-panel {
+            flex: 0 0 380px;
+        }
+
+        .right-panel {
+            flex: 1;
+        }
+
+        form {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 18px;
+        }
+
+        label {
+            font-weight: 700;
+        }
+
+        select {
+            width: 100%;
+            padding: 11px;
+            margin-bottom: 16px;
+        }
+
+        button {
+            padding: 12px 22px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .preview-box img {
+            width: 100%;
+            border: 1px solid #ccc;
+        }
+
+        .download-button {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 14px 22px;
+            background: #5b0dab;
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="title-bar">
+    <div class="container">
+        <h1>Division Facts Worksheet Generator</h1>
+    </div>
+</div>
+
+<div class="intro-section">
+    <div class="container">
+        <p class="subtitle">
+            Create a free printable division worksheet for basic practice.
+        </p>
+    </div>
+</div>
+
+<main class="page-wrap">
+    <div class="container">
+        <div class="main-layout">
+
+            <div class="left-panel">
+                <form method="POST" id="form">
+
+                    <label>Division Facts:</label>
+                    <select name="fact_number">
+                        <option value="mixed">Mixed Facts 1–12</option>
+                        <option value="7">Divide by 7</option>
+                    </select>
+
+                    <label>Image Style:</label>
+                    <select name="image_style">
+                        <option value="bw">Black and White</option>
+                        <option value="color">Color</option>
+                    </select>
+
+                    <label>Layout:</label>
+                    <select name="layout" id="layout">
+                        <option value="horizontal">Horizontal</option>
+                        <option value="long">Long Division Grid</option>
+                    </select>
+
+                    <button type="submit">Generate Worksheet</button>
+                </form>
+            </div>
+
+            <div class="right-panel">
+                <div class="preview-box">
+                    <h2>Your Worksheet Preview</h2>
+
+                    <!-- 🔥 THIS IS WHERE TEXT UPDATES -->
+                    <p id="worksheet-description">
+                        Your printable division worksheet is ready. Download the PDF after previewing it here.
+                    </p>
+
+                    <img src="/static/example-division-facts.png">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<!-- 🔥 SCRIPT -->
+<script>
+function updateWorksheetDescription() {
+    const layout = document.getElementById("layout").value;
+    const desc = document.getElementById("worksheet-description");
+
+    if (layout === "long") {
+        desc.innerText = "This worksheet includes long division problems with no remainders.";
+    } else {
+        desc.innerText = "This worksheet includes division facts with clean, no-remainder equations.";
+    }
+}
+
+updateWorksheetDescription();
+
+document.getElementById("layout").addEventListener("change", updateWorksheetDescription);
+</script>
+
+</body>
+</html>
