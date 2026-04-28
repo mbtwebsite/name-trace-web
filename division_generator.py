@@ -64,8 +64,8 @@ def generate_division_problems(count: int, fact_number: str) -> List[Tuple[int, 
         seen = set()
 
         while len(problems) < count:
-            divisor = random.randint(1, 12)
-            quotient = random.randint(1, 12)
+            divisor = random.randint(2, 12)
+            quotient = random.randint(2, 12)
             dividend = divisor * quotient
 
             if divisor == 0:
@@ -79,7 +79,7 @@ def generate_division_problems(count: int, fact_number: str) -> List[Tuple[int, 
 
     else:
         divisor = int(fact_number)
-        base_facts = [(divisor * quotient, divisor) for quotient in range(1, 13)]
+        base_facts = [(divisor * quotient, divisor) for quotient in range(2, 13)]
 
         while len(problems) < count:
             shuffled = base_facts[:]
@@ -328,7 +328,7 @@ def create_pdf(
     title = "Division Facts"
 
     if layout == "long":
-        subtitle = "Solve each long division problem (no remainders)"
+        subtitle = "Solve each division problem (no remainders)"
     elif fact_number == "mixed":
         subtitle = "Solve each division equation below"
     else:
