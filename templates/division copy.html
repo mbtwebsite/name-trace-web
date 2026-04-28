@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Division Facts Worksheet Generator</title>
+    <title>Division Facts Worksheet Generator | Free Printable Division Worksheets</title>
 
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
+    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -285,6 +287,24 @@
             background: #4b008f;
         }
 
+        .generator-links {
+            margin-top: 14px;
+            font-size: 0.96rem;
+            color: #333;
+            line-height: 1.55;
+            text-align: center;
+        }
+
+        .generator-links a {
+            color: #4b008f;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .generator-links a:hover {
+            text-decoration: underline;
+        }
+
         @media (max-width: 900px) {
             .main-layout {
                 flex-direction: column;
@@ -323,6 +343,7 @@
                 align-items: flex-start;
             }
         }
+
     </style>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6792544063337994"
@@ -342,7 +363,7 @@
 <header class="site-header">
     <div class="container site-header-inner">
         <a href="https://free4classrooms.com" class="brand">
-            <img src="/static/free4classrooms-logo.png" alt="Free4Classrooms logo">
+            <img src="{{ url_for('static', filename='free4classrooms-logo.png') }}" alt="Free4Classrooms logo">
             <div>
                 <div class="brand-title">Free4Classrooms.com</div>
                 <div class="brand-tagline">Free Printable Worksheets for Kindergarten &amp; Beyond</div>
@@ -351,7 +372,7 @@
 
         <nav class="nav">
             <a href="https://free4classrooms.com">Home</a>
-            <a href="https://free4classrooms.com/math/">Math</a>
+            <a href="https://free4classrooms.com/free-math-worksheets/">Math</a>
             <a href="https://free4classrooms.com/reading-worksheets/">Reading</a>
             <a href="https://free4classrooms.com/free-printable-sight-word-worksheets/">Sight Words</a>
         </nav>
@@ -367,9 +388,20 @@
 <div class="intro-section">
     <div class="container">
         <p class="subtitle">
-            Create a free printable division facts worksheet for basic division practice. Choose mixed facts or a division fact family,
-            select a black and white or color image style, and download a clean worksheet PDF.
+            Create free printable <strong>division worksheets</strong> instantly with this division facts worksheet generator.
+            Choose mixed division facts or a specific divisor from 1–12, select a horizontal or long division layout,
+            and download a clean, classroom-ready PDF for math practice at home or school.
+            You can also visit our
+            <a href="https://practice.free4classrooms.com/">Worksheet Generator Hub</a>
+            to find more free worksheet makers.
         </p>
+    </div>
+    <div class="generator-links">
+        <strong>More worksheet generators:</strong>
+        <a href="https://practice.free4classrooms.com/">All Worksheet Generators</a> |
+        <a href="/addition-generator">Addition Worksheet Generator</a> |
+        <a href="/subtraction-generator">Subtraction Worksheet Generator</a> |
+        <a href="/multiplication-generator">Multiplication Worksheet Generator</a>
     </div>
 </div>
 
@@ -406,6 +438,7 @@
                     </select>
 
                     <label for="layout"><strong>Layout:</strong></label>
+                    <p class="field-help">Choose horizontal division facts or a long division grid with no remainders.</p>
                     <select name="layout" id="layout">
                         <option value="horizontal" {% if layout == "horizontal" %}selected{% endif %}>Horizontal</option>
                         <option value="long" {% if layout == "long" %}selected{% endif %}>Long Division Grid</option>
@@ -438,6 +471,7 @@
                         <li>Division facts from 1–12</li>
                         <li>One divisor or mixed facts</li>
                         <li>Horizontal facts or long division grid</li>
+                        <li>Long division problems have no remainders</li>
                         <li>Black and white or color worksheet style</li>
                     </ul>
                 </div>
@@ -447,7 +481,9 @@
                 {% if preview_filename %}
                     <div class="preview-box">
                         <h2>Your Worksheet Preview</h2>
-                        <p>Your printable division facts worksheet is ready. Download the PDF after previewing it here.</p>
+                        <p id="worksheet-description">
+                            Your printable division worksheet is ready. Download the PDF after previewing it here.
+                        </p>
                         <img
                             src="{{ url_for('preview_file', filename=preview_filename) }}"
                             alt="Generated division facts worksheet preview"
@@ -456,9 +492,11 @@
                 {% else %}
                     <div class="preview-box">
                         <h2>Example Division Worksheet</h2>
-                        <p>This worksheet includes division facts with large equations and student-friendly answer spaces.</p>
+                        <p id="worksheet-description">
+                            This worksheet includes division facts with clean, no-remainder equations.
+                        </p>
                         <img
-                            src="/static/example-division-facts.png"
+                            src="{{ url_for('static', filename='example-division-facts.png') }}?v=3"
                             alt="Example of division facts worksheet preview"
                         >
                     </div>
@@ -479,6 +517,23 @@
 </footer>
 
 <script>
+function updateWorksheetDescription() {
+    const layoutSelect = document.getElementById("layout");
+    const desc = document.getElementById("worksheet-description");
+
+    if (!layoutSelect || !desc) return;
+
+    if (layoutSelect.value === "long") {
+        desc.innerText = "This worksheet includes long division problems with no remainders.";
+    } else {
+        desc.innerText = "This worksheet includes division facts with clean, no-remainder equations.";
+    }
+}
+
+updateWorksheetDescription();
+
+document.getElementById("layout").addEventListener("change", updateWorksheetDescription);
+
 document.getElementById("form").addEventListener("submit", function() {
     const btn = document.getElementById("submit-btn");
     btn.innerText = "Generating...";

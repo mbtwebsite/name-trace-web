@@ -57,56 +57,18 @@ def slug_part(text: str) -> str:
     return text.strip("-")
 
 
-def generate_division_problems(count: int, fact_number: str, layout: str = "horizontal") -> List[Tuple[int, int]]:
-    """
-    Returns problems as (dividend, divisor).
+def generate_division_problems(count: int, fact_number: str) -> List[Tuple[int, int]]:
+    problems = []
 
-    Division facts:
-      - mixed_50  = no-remainder facts with dividends up to 50
-      - mixed_100 = no-remainder facts with dividends up to 100
-      - mixed / mixed_144 = standard 2–12 facts
-      - 2 through 12 = fixed divisor practice, quotient 2–12
+    if fact_number == "mixed":
+        seen = set()
 
-    Long division:
-      - 3-digit dividend ÷ 1-digit divisor, no remainders
-    """
-    problems: List[Tuple[int, int]] = []
-    seen = set()
-
-    if layout == "long":
-        while len(problems) < count:
-            divisor = random.randint(2, 9)
-            quotient = random.randint(12, 99)
-            dividend = divisor * quotient
-
-            # Keep this as true 3-digit long division.
-            if dividend < 100 or dividend > 999:
-                continue
-
-            problem = (dividend, divisor)
-
-            if problem not in seen:
-                seen.add(problem)
-                problems.append(problem)
-
-        return problems
-
-    if fact_number in ["mixed", "mixed_144"]:
-        max_dividend = 144
-    elif fact_number == "mixed_100":
-        max_dividend = 100
-    elif fact_number == "mixed_50":
-        max_dividend = 50
-    else:
-        max_dividend = None
-
-    if fact_number.startswith("mixed"):
         while len(problems) < count:
             divisor = random.randint(2, 12)
             quotient = random.randint(2, 12)
             dividend = divisor * quotient
 
-            if max_dividend is not None and dividend > max_dividend:
+            if divisor == 0:
                 continue
 
             problem = (dividend, divisor)
@@ -127,6 +89,7 @@ def generate_division_problems(count: int, fact_number: str, layout: str = "hori
         problems = problems[:count]
 
     return problems
+
 
 def draw_outer_border(c: canvas.Canvas, image_style: str) -> None:
     margin = 10
@@ -209,9 +172,7 @@ def draw_horizontal_problem(
     c.drawRightString(cell_x + 36, y + 3, f"{index})")
 
     # 🔥 Fixed column for equals sign
-    #equals_x = cell_x + cell_w - 120
-    EQUATION_SHIFT = 140
-    equals_x = cell_x + cell_w - EQUATION_SHIFT
+    equals_x = cell_x + cell_w - 120
 
     # Left side of equation (right-aligned to equals)
     left_text = f"{dividend} ÷ {divisor}"
@@ -249,18 +210,14 @@ def draw_long_division_problem(
 
     # Center anchor
     center_x = cell_x + (cell_w / 2)
-    #center_y = cell_y + (cell_h / 2) + 35
-    VERTICAL_SHIFT = 35
-    center_y = cell_y + (cell_h / 2) + VERTICAL_SHIFT
+    center_y = cell_y + (cell_h / 2) + 18
 
     # Long division PNG size
     symbol_w = 102
     symbol_h = 48
 
     block_w = 185
-    #block_x = center_x - (block_w / 2)
-    HORIZONTAL_SHIFT = 15
-    block_x = center_x - (block_w / 2) - HORIZONTAL_SHIFT
+    block_x = center_x - (block_w / 2)
 
     shift_right = 6
 
@@ -287,12 +244,12 @@ def draw_long_division_problem(
     c.setFont(PROBLEM_FONT_NAME, 34)
 
     # Outside number
-    divisor_x = symbol_x - 0
+    divisor_x = symbol_x - 6
     divisor_y = symbol_y + 14
     c.drawRightString(divisor_x, divisor_y, str(divisor))
 
     # Inside number
-    dividend_x = symbol_x + 14
+    dividend_x = symbol_x + 24
     dividend_y = symbol_y + 14
     c.drawString(dividend_x, dividend_y, str(dividend))
 
@@ -368,20 +325,14 @@ def create_pdf(
     image_style: str,
     layout: str = "horizontal",
 ) -> None:
-    if layout == "long":
-        title = "Long Division"
-        subtitle = "3-digit ÷ 1-digit, no remainders"
-    else:
-        title = "Division Facts"
+    title = "Division Facts"
 
-        if fact_number == "mixed_50":
-            subtitle = "Mixed division facts within 50"
-        elif fact_number == "mixed_100":
-            subtitle = "Mixed division facts within 100"
-        elif fact_number in ["mixed", "mixed_144"]:
-            subtitle = "Mixed division facts 2–12"
-        else:
-            subtitle = f"Divide by {fact_number}s"
+    if layout == "long":
+        subtitle = "Solve each division problem (no remainders)"
+    elif fact_number == "mixed":
+        subtitle = "Solve each division equation below"
+    else:
+        subtitle = f"Divide by {fact_number}s"
 
     c = canvas.Canvas(str(output_path), pagesize=letter)
 
@@ -396,7 +347,7 @@ def create_pdf(
 def main() -> None:
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--fact-number", choices=["mixed_50", "mixed_100", "mixed_144", "mixed"] + [str(i) for i in range(2, 13)], default="mixed_100")
+    parser.add_argument("--fact-number", choices=["mixed"] + [str(i) for i in range(1, 13)], default="mixed")
     parser.add_argument("--count", type=int, default=24)
     parser.add_argument("--image-style", choices=["bw", "color"], default="bw")
     parser.add_argument("--layout", choices=["horizontal", "long"], default="horizontal")
@@ -410,14 +361,12 @@ def main() -> None:
 
     count = 9 if layout == "long" else args.count
 
-    problems = generate_division_problems(count, fact_number, layout)
+    problems = generate_division_problems(count, fact_number)
 
     if args.filename:
         filename = args.filename
-    elif layout == "long":
-        filename = f"long-division-3-digit-by-1-digit-no-remainders-{image_style}.pdf"
     else:
-        filename = f"division-{slug_part(fact_number)}-{layout}-{image_style}.pdf"
+        filename = f"division-facts-{slug_part(fact_number)}-{layout}-{image_style}.pdf"
 
     output_path = GENERATED_DIR / filename
 

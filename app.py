@@ -404,12 +404,12 @@ def render_division_generator_page():
     pdf_filename = ""
     preview_filename = ""
 
-    fact_number = request.form.get("fact_number", "mixed") if request.method == "POST" else "mixed"
+    fact_number = request.form.get("fact_number", "mixed_100") if request.method == "POST" else "mixed_100"
     image_style = request.form.get("image_style", "bw") if request.method == "POST" else "bw"
     layout = request.form.get("layout", "horizontal") if request.method == "POST" else "horizontal"
     count = "24"
 
-    valid_fact_numbers = {"mixed"} | {str(i) for i in range(1, 13)}
+    valid_fact_numbers = {"mixed", "mixed_50", "mixed_100", "mixed_144"} | {str(i) for i in range(2, 13)}
 
     if request.method == "POST":
         cleanup_old_files(GENERATED_DIR)
@@ -417,7 +417,7 @@ def render_division_generator_page():
         if not verify_turnstile():
             error = "Security check failed. Please try again."
         elif fact_number not in valid_fact_numbers:
-            error = "Please choose mixed facts or a number from 1 to 12."
+            error = "Please choose a valid division option."
         elif image_style not in {"bw", "color"}:
             error = "Please choose black and white or color."
         elif layout not in {"horizontal", "long"}:

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Division Facts Worksheet Generator | Free Printable Division Worksheets</title>
+    <title>Division Worksheet Generator | Division Facts & Long Division Worksheets</title>
 
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
@@ -381,17 +381,17 @@
 
 <div class="title-bar">
     <div class="container">
-        <h1>Division Facts Worksheet Generator</h1>
+        <h1>Division Worksheet Generator</h1>
     </div>
 </div>
 
 <div class="intro-section">
     <div class="container">
         <p class="subtitle">
-            Create free printable <strong>division worksheets</strong> instantly with this division facts worksheet generator.
-            Choose mixed division facts or a specific divisor from 1–12, select a horizontal or long division layout,
-            and download a clean, classroom-ready PDF for math practice at home or school.
-            You can also visit our
+            Create free printable <strong>division worksheets</strong> instantly with this division worksheet generator.
+            Choose division facts within 50, within 100, or 2–12 facts, or make a 3-digit by 1-digit
+            <strong>long division worksheet with no remainders</strong>. Download a clean, classroom-ready PDF
+            for math practice at home or school. You can also visit our
             <a href="https://practice.free4classrooms.com/">Worksheet Generator Hub</a>
             to find more free worksheet makers.
         </p>
@@ -412,36 +412,39 @@
             <div class="left-panel">
                 <form method="POST" id="form">
 
-                    <label for="fact_number">Division Facts:</label>
-                    <p class="field-help">Choose one divisor from 1–12, or choose mixed facts for extra practice.</p>
-                    <select name="fact_number" id="fact_number">
-                        <option value="mixed" {% if fact_number == "mixed" %}selected{% endif %}>Mixed Facts 1–12</option>
-                        <option value="1" {% if fact_number == "1" %}selected{% endif %}>Divide by 1</option>
-                        <option value="2" {% if fact_number == "2" %}selected{% endif %}>Divide by 2</option>
-                        <option value="3" {% if fact_number == "3" %}selected{% endif %}>Divide by 3</option>
-                        <option value="4" {% if fact_number == "4" %}selected{% endif %}>Divide by 4</option>
-                        <option value="5" {% if fact_number == "5" %}selected{% endif %}>Divide by 5</option>
-                        <option value="6" {% if fact_number == "6" %}selected{% endif %}>Divide by 6</option>
-                        <option value="7" {% if fact_number == "7" %}selected{% endif %}>Divide by 7</option>
-                        <option value="8" {% if fact_number == "8" %}selected{% endif %}>Divide by 8</option>
-                        <option value="9" {% if fact_number == "9" %}selected{% endif %}>Divide by 9</option>
-                        <option value="10" {% if fact_number == "10" %}selected{% endif %}>Divide by 10</option>
-                        <option value="11" {% if fact_number == "11" %}selected{% endif %}>Divide by 11</option>
-                        <option value="12" {% if fact_number == "12" %}selected{% endif %}>Divide by 12</option>
+                    <label for="layout"><strong>Worksheet Type:</strong></label>
+                    <p class="field-help">Choose division facts for basic practice or long division for 3-digit ÷ 1-digit problems.</p>
+                    <select name="layout" id="layout">
+                        <option value="horizontal" {% if layout == "horizontal" %}selected{% endif %}>Division Facts</option>
+                        <option value="long" {% if layout == "long" %}selected{% endif %}>Long Division: 3-digit ÷ 1-digit, no remainders</option>
                     </select>
+
+                    <div id="facts-options">
+                        <label for="fact_number">Division Facts Range:</label>
+                        <p class="field-help">Choose mixed no-remainder facts by range, or practice one divisor from 2–12.</p>
+                        <select name="fact_number" id="fact_number">
+                            <option value="mixed_50" {% if fact_number == "mixed_50" %}selected{% endif %}>Mixed Facts Within 50</option>
+                            <option value="mixed_100" {% if fact_number == "mixed_100" or fact_number == "mixed" %}selected{% endif %}>Mixed Facts Within 100</option>
+                            <option value="mixed_144" {% if fact_number == "mixed_144" %}selected{% endif %}>Mixed Facts 2–12</option>
+                            <option value="2" {% if fact_number == "2" %}selected{% endif %}>Divide by 2</option>
+                            <option value="3" {% if fact_number == "3" %}selected{% endif %}>Divide by 3</option>
+                            <option value="4" {% if fact_number == "4" %}selected{% endif %}>Divide by 4</option>
+                            <option value="5" {% if fact_number == "5" %}selected{% endif %}>Divide by 5</option>
+                            <option value="6" {% if fact_number == "6" %}selected{% endif %}>Divide by 6</option>
+                            <option value="7" {% if fact_number == "7" %}selected{% endif %}>Divide by 7</option>
+                            <option value="8" {% if fact_number == "8" %}selected{% endif %}>Divide by 8</option>
+                            <option value="9" {% if fact_number == "9" %}selected{% endif %}>Divide by 9</option>
+                            <option value="10" {% if fact_number == "10" %}selected{% endif %}>Divide by 10</option>
+                            <option value="11" {% if fact_number == "11" %}selected{% endif %}>Divide by 11</option>
+                            <option value="12" {% if fact_number == "12" %}selected{% endif %}>Divide by 12</option>
+                        </select>
+                    </div>
 
                     <label for="image_style">Image Style:</label>
                     <p class="field-help">Choose black and white for printer-friendly worksheets, or color for a more decorative version.</p>
                     <select name="image_style" id="image_style">
                         <option value="bw" {% if image_style == "bw" %}selected{% endif %}>Black and White</option>
                         <option value="color" {% if image_style == "color" %}selected{% endif %}>Color</option>
-                    </select>
-
-                    <label for="layout"><strong>Layout:</strong></label>
-                    <p class="field-help">Choose horizontal division facts or a long division grid with no remainders.</p>
-                    <select name="layout" id="layout">
-                        <option value="horizontal" {% if layout == "horizontal" %}selected{% endif %}>Horizontal</option>
-                        <option value="long" {% if layout == "long" %}selected{% endif %}>Long Division Grid</option>
                     </select>
 
                     <div class="cf-turnstile" data-sitekey="0x4AAAAAAC1CCmRmusRfWr9u"></div>
@@ -468,10 +471,10 @@
                 <div class="idea-list">
                     <h3>Worksheet options:</h3>
                     <ul>
-                        <li>Division facts from 1–12</li>
+                        <li>Division facts within 50, within 100, or 2–12</li>
                         <li>One divisor or mixed facts</li>
-                        <li>Horizontal facts or long division grid</li>
-                        <li>Long division problems have no remainders</li>
+                        <li>Long division: 3-digit ÷ 1-digit</li>
+                        <li>All problems have whole-number answers with no remainders</li>
                         <li>Black and white or color worksheet style</li>
                     </ul>
                 </div>
@@ -493,11 +496,14 @@
                     <div class="preview-box">
                         <h2>Example Division Worksheet</h2>
                         <p id="worksheet-description">
-                            This worksheet includes division facts with clean, no-remainder equations.
+                            Choose division facts or long division to make a clean, no-remainder worksheet.
                         </p>
                         <img
-                            src="{{ url_for('static', filename='example-division-facts.png') }}?v=3"
-                            alt="Example of division facts worksheet preview"
+                            id="example-preview-img"
+                            src="{{ url_for('static', filename='example-division-facts-mixed.png') }}?v=4"
+                            data-facts-src="{{ url_for('static', filename='example-division-facts-mixed.png') }}?v=4"
+                            data-long-src="{{ url_for('static', filename='example-division-facts.png') }}?v=4"
+                            alt="Example of division worksheet preview"
                         >
                     </div>
                 {% endif %}
@@ -517,22 +523,39 @@
 </footer>
 
 <script>
-function updateWorksheetDescription() {
+function updateWorksheetOptions() {
     const layoutSelect = document.getElementById("layout");
+    const factsOptions = document.getElementById("facts-options");
+    const factNumber = document.getElementById("fact_number");
     const desc = document.getElementById("worksheet-description");
+    const previewImg = document.getElementById("example-preview-img");
 
-    if (!layoutSelect || !desc) return;
+    if (!layoutSelect) return;
 
-    if (layoutSelect.value === "long") {
-        desc.innerText = "This worksheet includes long division problems with no remainders.";
-    } else {
-        desc.innerText = "This worksheet includes division facts with clean, no-remainder equations.";
+    const isLong = layoutSelect.value === "long";
+
+    if (factsOptions) {
+        factsOptions.style.display = isLong ? "none" : "block";
+    }
+
+    if (factNumber) {
+        factNumber.disabled = isLong;
+    }
+
+    if (desc) {
+        desc.innerText = isLong
+            ? "This worksheet includes 3-digit by 1-digit long division problems with no remainders."
+            : "This worksheet includes division facts with clean, no-remainder equations.";
+    }
+
+    if (previewImg) {
+        previewImg.src = isLong ? previewImg.dataset.longSrc : previewImg.dataset.factsSrc;
     }
 }
 
-updateWorksheetDescription();
+updateWorksheetOptions();
 
-document.getElementById("layout").addEventListener("change", updateWorksheetDescription);
+document.getElementById("layout").addEventListener("change", updateWorksheetOptions);
 
 document.getElementById("form").addEventListener("submit", function() {
     const btn = document.getElementById("submit-btn");
