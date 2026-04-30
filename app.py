@@ -32,11 +32,15 @@ NAME_TRACE_TEMPLATE = "name_trace.html"
 COLOR_TRACE_TEMPLATE = "color_trace.html"
 ADDITION_TEMPLATE = "addition_generator.html"
 MULTIPLICATION_TEMPLATE = "multiplication.html"
+TWO_DIGIT_MULTIPLICATION_TEMPLATE = "two_digit_multiplication.html"
+DIVISION_TEMPLATE = "division.html"
 
 NAME_TRACE_SCRIPT = "name_trace.py"
 COLOR_TRACE_SCRIPT = "color_trace.py"
 ADDITION_SCRIPT = "addition_generator.py"
 MULTIPLICATION_SCRIPT = "multiplication_generator.py"
+TWO_DIGIT_MULTIPLICATION_SCRIPT = "two_digit_multiplication_generator.py"
+DIVISION_SCRIPT = "division_generator.py"
 
 
 def is_valid_text(value: str):
@@ -394,8 +398,100 @@ def render_multiplication_generator_page():
 
     return response
 
-DIVISION_TEMPLATE = "division.html"
-DIVISION_SCRIPT = "division_generator.py"
+def render_two_digit_multiplication_generator_page():
+    error = ""
+    success = ""
+    pdf_filename = ""
+    preview_filename = ""
+
+    problem_type = request.form.get("problem_type", "mixed") if request.method == "POST" else "mixed"
+    image_style = request.form.get("image_style", "bw") if request.method == "POST" else "bw"
+    count = "12"
+    layout = "vertical-3x4"
+
+    valid_problem_types = {"mixed", "no-regrouping", "with-regrouping"}
+
+    if request.method == "POST":
+        cleanup_old_files(GENERATED_DIR)
+
+        if not verify_turnstile():
+            error = "Security check failed. Please try again."
+        elif problem_type not in valid_problem_types:
+            error = "Please choose a valid problem type."
+        elif image_style not in {"bw", "color"}:
+            error = "Please choose black and white or color."
+        else:
+            try:
+                timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+                pdf_filename = f"2-digit-multiplication-{problem_type}-{image_style}-{count}-{timestamp}.pdf"
+                preview_filename = pdf_filename.replace(".pdf", ".png")
+
+                result = subprocess.run(
+                    [
+                        "python3",
+                        TWO_DIGIT_MULTIPLICATION_SCRIPT,
+                        "--problem-type",
+                        problem_type,
+                        "--count",
+                        count,
+                        "--image-style",
+                        image_style,
+                        "--layout",
+                        layout,
+                        "--filename",
+                        pdf_filename,
+                    ],
+                    cwd=str(BASE_DIR),
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                )
+
+                print("STDOUT:", result.stdout)
+                print("STDERR:", result.stderr)
+
+                pdf_path = GENERATED_DIR / pdf_filename
+                preview_path = GENERATED_DIR / preview_filename
+
+                if pdf_path.exists():
+                    create_preview_image(pdf_path, preview_path)
+                    success = "2-digit multiplication worksheet generated."
+                else:
+                    error = "The script ran, but no PDF was found."
+                    pdf_filename = ""
+                    preview_filename = ""
+
+                if not preview_path.exists():
+                    preview_filename = ""
+
+            except subprocess.CalledProcessError as e:
+                error = "There was a problem generating the 2-digit multiplication worksheet."
+                print("STDOUT:", e.stdout)
+                print("STDERR:", e.stderr)
+
+            except Exception as e:
+                error = f"Preview generation failed: {e}"
+                print("ERROR:", e)
+
+    response = make_response(
+        render_template(
+            TWO_DIGIT_MULTIPLICATION_TEMPLATE,
+            year=datetime.now().year,
+            problem_type=problem_type,
+            image_style=image_style,
+            error=error,
+            success=success,
+            pdf_filename=pdf_filename,
+            preview_filename=preview_filename,
+            turnstile_site_key=TURNSTILE_SITE_KEY,
+        )
+    )
+
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+
+    return response
 
 
 def render_division_generator_page():
@@ -495,12 +591,6 @@ def render_division_generator_page():
     response.headers["Expires"] = "0"
 
     return response
-
-
-@app.route("/division-generator/", methods=["GET", "POST"])
-@limiter.limit("5 per minute")
-def division_generator():
-    return render_division_generator_page()
 
 def render_subtraction_generator_page():
     error = ""
@@ -626,6 +716,16 @@ def addition_generator():
 @limiter.limit("5 per minute")
 def multiplication_generator():
     return render_multiplication_generator_page()
+
+@app.route("/2-digit-multiplication-generator/", methods=["GET", "POST"])
+@limiter.limit("5 per minute")
+def two_digit_multiplication_generator():
+    return render_two_digit_multiplication_generator_page()
+
+@app.route("/division-generator/", methods=["GET", "POST"])
+@limiter.limit("5 per minute")
+def division_generator():
+    return render_division_generator_page()
 
 
 @app.route("/subtraction-generator/", methods=["GET", "POST"])
