@@ -11,6 +11,7 @@
             margin: 0;
             background: #f3f3f3;
             color: #222;
+            padding-bottom: 90px;
         }
 
         .container {
@@ -18,7 +19,6 @@
             margin: 0 auto;
         }
 
-        /* ===== Header ===== */
         .site-header {
             background: #4b008f;
             color: white;
@@ -61,6 +61,7 @@
         .nav {
             display: flex;
             gap: 22px;
+            flex-wrap: wrap;
         }
 
         .nav a {
@@ -69,7 +70,6 @@
             font-weight: 700;
         }
 
-        /* ===== Title Bar ===== */
         .title-bar {
             background: #fff200;
             border-top: 4px solid #ff7a00;
@@ -93,7 +93,6 @@
             max-width: 700px;
         }
 
-        /* ===== Generator Cards ===== */
         .cards {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -137,7 +136,34 @@
             background: #360066;
         }
 
-        /* ===== Footer ===== */
+        .sticky-ad {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            z-index: 9999;
+            padding: 6px 0;
+            min-height: 90px;
+        }
+
+        .sticky-ad .close-btn {
+            position: absolute;
+            right: 10px;
+            top: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            background: #eee;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            line-height: 22px;
+            text-align: center;
+            z-index: 10000;
+        }
+
         .site-footer {
             background: white;
             border-top: 1px solid #ddd;
@@ -149,6 +175,7 @@
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
+            gap: 12px;
         }
 
         @media (max-width: 900px) {
@@ -156,14 +183,28 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        @media (min-width: 768px) {
+            .sticky-ad {
+                display: none;
+            }
+
+            body {
+                padding-bottom: 0;
+            }
+        }
     </style>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6792544063337994"
+        crossorigin="anonymous"></script>
 </head>
+
 <body>
 
 <header class="site-header">
     <div class="container site-header-inner">
         <a href="https://free4classrooms.com" class="brand">
-            <img src="/static/free4classrooms-logo.png">
+            <img src="/static/free4classrooms-logo.png" alt="Free4Classrooms logo">
             <div>
                 <div class="brand-title">Free4Classrooms.com</div>
                 <div class="brand-tagline">Free Printable Worksheets for Kindergarten & Beyond</div>
@@ -193,110 +234,98 @@
     </div>
 </div>
 
-<main class="container">
+<div class="container" style="margin: 20px auto; text-align:center; min-height: 90px;">
+    <ins class="adsbygoogle lazy-adsense"
+         style="display:block"
+         data-ad-client="ca-pub-6792544063337994"
+         data-ad-slot="4011928352"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+</div>
 
+<main class="container">
     <div class="cards">
 
-        <!-- NAME TRACE -->
         <div class="card">
             <h2>Name Trace Generator</h2>
-
-            <img src="/static/example-name-trace.png">
-
+            <img src="/static/example-name-trace.png" alt="Example name tracing worksheet">
             <p>
                 Create classic name tracing worksheets with dashed lines.
                 Perfect for preschool and kindergarten handwriting practice.
             </p>
-
             <a href="/name-trace/">Use Name Trace Generator</a>
         </div>
 
-        <!-- COLOR TRACE -->
         <div class="card">
             <h2>Name & Word Worksheet Generator</h2>
-
-            <img src="/static/example-color-trace.png">
-
+            <img src="/static/example-color-trace.png" alt="Example name and word worksheet">
             <p>
                 Create worksheets with writing, tracing, and coloring sections.
                 Works for names, sight words, and CVC words.
             </p>
-
             <a href="/color-trace/">Use Word Generator</a>
         </div>
 
-        <!-- ADDITION GENERATOR -->
         <div class="card">
             <h2>Addition Worksheet Generator</h2>
-
-            <img src="/static/example-2-digit-addition.png?v=beb7560">
-
+            <img src="/static/example-2-digit-addition.png?v=beb7560" alt="Example addition worksheet">
             <p>
                 Create printable addition worksheets for 1-digit and 2-digit practice.
                 Includes regrouping options and clean layouts for math fluency.
             </p>
-
             <a href="/addition-generator/">Use Addition Generator</a>
         </div>
 
-        <!-- SUBTRACTION GENERATOR -->
+        <div style="grid-column: 1 / -1; text-align:center; min-height: 90px;">
+            <ins class="adsbygoogle lazy-adsense"
+                 style="display:block"
+                 data-ad-client="ca-pub-6792544063337994"
+                 data-ad-slot="4011928352"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+
         <div class="card">
             <h2>Subtraction Worksheet Generator</h2>
-
-            <img src="/static/example-2-digit-subtraction.png">
-
+            <img src="/static/example-2-digit-subtraction.png" alt="Example subtraction worksheet">
             <p>
                 Create printable subtraction worksheets for 1-digit and 2-digit practice.
                 Includes regrouping options and clean layouts for math fluency.
             </p>
-
             <a href="/subtraction-generator/">Use Subtraction Generator</a>
         </div>
 
-        <!-- MULTIPLICATION GENERATOR -->
         <div class="card">
             <h2>Multiplication Facts Generator</h2>
-
-            <img src="/static/example-multiplication-facts.png">
-
+            <img src="/static/example-multiplication-facts.png" alt="Example multiplication facts worksheet">
             <p>
                 Create printable multiplication facts worksheets for numbers 0–12.
                 Choose one times table or mixed facts with horizontal or vertical layouts.
             </p>
-
             <a href="/multiplication-generator/">Use Multiplication Generator</a>
         </div>
 
-        <!-- DIVISION GENERATOR -->
         <div class="card">
             <h2>Division Facts Generator</h2>
-
-            <img src="/static/example-division-facts.png?v=3">
-
+            <img src="/static/example-division-facts.png?v=3" alt="Example division facts worksheet">
             <p>
                 Create printable division worksheets with no remainders.
                 Includes horizontal equations and long division grid layouts for clear student practice.
             </p>
-
             <a href="/division-generator/">Use Division Generator</a>
         </div>
 
-        <!-- 2-DIGIT MULTIPLICATION GENERATOR -->
         <div class="card">
             <h2>2-Digit Multiplication Generator</h2>
-
-            <img src="/static/2-digit-example-multiplication-mixed-color-12-vertical.png">
-
+            <img src="/static/2-digit-example-multiplication-mixed-color-12-vertical.png" alt="Example 2-digit multiplication worksheet">
             <p>
                 Create printable 2-digit by 2-digit multiplication worksheets with vertical problems,
                 regrouping practice, answer keys, and step-by-step worked solutions.
             </p>
-
             <a href="/2-digit-multiplication-generator/">Use 2-Digit Generator</a>
         </div>
 
     </div>
-
 </main>
 
 <footer class="site-footer">
@@ -307,6 +336,48 @@
         </div>
     </div>
 </footer>
+
+<div class="sticky-ad" id="stickyAd">
+    <div class="close-btn" onclick="document.getElementById('stickyAd').style.display='none'">×</div>
+    <ins class="adsbygoogle lazy-adsense"
+         style="display:block"
+         data-ad-client="ca-pub-6792544063337994"
+         data-ad-slot="4011928352"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const ads = document.querySelectorAll(".lazy-adsense");
+
+    const loadAd = (ad) => {
+        if (ad.dataset.loaded === "true") return;
+        ad.dataset.loaded = "true";
+
+        try {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        } catch (e) {
+            console.warn("AdSense load error:", e);
+        }
+    };
+
+    if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    loadAd(entry.target);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { rootMargin: "300px 0px" });
+
+        ads.forEach(ad => observer.observe(ad));
+    } else {
+        ads.forEach(loadAd);
+    }
+});
+</script>
 
 </body>
 </html>
