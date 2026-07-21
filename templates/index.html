@@ -3,218 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Worksheet Generator Tools</title>
+    {% include "components/seo_head.html" %}
     <link rel="icon" type="image/png" href="/static/favicon.png">
 
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Free Printable Worksheet Generators",
+      "description": "Create free printable worksheets for math, handwriting, names, sight words, and early learning.",
+      "url": "https://practice.free4classrooms.com/",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Free4Classrooms.com",
+        "url": "https://free4classrooms.com/"
+      },
+      "mainEntity": {
+        "@type": "ItemList",
+        "name": "Worksheet Generator Tools",
+        "itemListElement": [
+          {"@type":"ListItem","position":1,"name":"Name Trace Generator","url":"https://practice.free4classrooms.com/name-trace/"},
+          {"@type":"ListItem","position":2,"name":"Name and Word Worksheet Generator","url":"https://practice.free4classrooms.com/color-trace/"},
+          {"@type":"ListItem","position":3,"name":"Addition Worksheet Generator","url":"https://practice.free4classrooms.com/addition-generator/"},
+          {"@type":"ListItem","position":4,"name":"Subtraction Worksheet Generator","url":"https://practice.free4classrooms.com/subtraction-generator/"},
+          {"@type":"ListItem","position":5,"name":"Multiplication Worksheet Generator","url":"https://practice.free4classrooms.com/multiplication-generator/"},
+          {"@type":"ListItem","position":6,"name":"Division Worksheet Generator","url":"https://practice.free4classrooms.com/division-generator/"},
+          {"@type":"ListItem","position":7,"name":"2-Digit Multiplication Generator","url":"https://practice.free4classrooms.com/2-digit-multiplication-generator/"}
+        ]
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type":"Question","name":"Are the worksheet generators free?","acceptedAnswer":{"@type":"Answer","text":"Yes. The worksheet generators are free to use and create printable PDF worksheets without requiring an account."}},
+        {"@type":"Question","name":"Can teachers use the worksheets in the classroom?","acceptedAnswer":{"@type":"Answer","text":"Yes. Teachers may print the generated worksheets for classroom instruction, centers, intervention, homework, and tutoring."}},
+        {"@type":"Question","name":"Do the generators create printable PDF files?","acceptedAnswer":{"@type":"Answer","text":"Yes. Each generator creates a PDF that can be downloaded and printed."}},
+        {"@type":"Question","name":"Do I need to create an account?","acceptedAnswer":{"@type":"Answer","text":"No. You can use the worksheet generators without creating an account."}}
+      ]
+    }
+    </script>
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background: #f3f3f3;
-            color: #222;
-            padding-bottom: 90px;
-        }
-
-        .container {
-            width: min(1100px, calc(100% - 40px));
-            margin: 0 auto;
-        }
-
-        .site-header {
-            background: #4b008f;
-            color: white;
-            padding: 18px 0;
-            border-top: 6px solid #ff7a00;
-        }
-
-        .site-header-inner {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            text-decoration: none;
-            color: white;
-        }
-
-        .brand img {
-            height: 78px;
-        }
-
-        .brand-title {
-            font-size: 2.05rem;
-            font-weight: 800;
-            color: #ffe600;
-        }
-
-        .brand-tagline {
-            font-size: 0.95rem;
-            color: #76ff2f;
-            font-weight: 700;
-        }
-
-        .nav {
-            display: flex;
-            gap: 22px;
-            flex-wrap: wrap;
-        }
-
-        .nav a {
-            color: #4deaff;
-            text-decoration: none;
-            font-weight: 700;
-        }
-
-        .title-bar {
-            background: #fff200;
-            border-top: 4px solid #ff7a00;
-            padding: 16px 0;
-        }
-
-        .title-bar h1 {
-            margin: 0;
-            font-size: 2.2rem;
-            font-weight: 800;
-        }
-
-        .intro-section {
-            background: white;
-            border-bottom: 1px solid #ddd;
-            padding: 18px 0;
-        }
-
-        .subtitle {
-            margin: 0;
-            max-width: 700px;
-        }
-
-        .cards {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 40px;
-            margin-top: 40px;
-        }
-
-        .card {
-            background: white;
-            border: 1px solid #ddd;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .card h2 {
-            margin-top: 0;
-        }
-
-        .card img {
-            width: 100%;
-            border: 1px solid #ccc;
-            margin-bottom: 15px;
-        }
-
-        .card p {
-            font-size: 0.95rem;
-            color: #333;
-        }
-
-        .card a {
-            display: inline-block;
-            margin-top: 12px;
-            padding: 12px 20px;
-            background: #4b008f;
-            color: white;
-            text-decoration: none;
-            font-weight: 700;
-        }
-
-        .card a:hover {
-            background: #360066;
-        }
-
-        .sticky-ad {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: #fff;
-            border-top: 1px solid #ddd;
-            text-align: center;
-            z-index: 9999;
-            padding: 6px 0;
-            min-height: 90px;
-        }
-
-        .sticky-ad .close-btn {
-            position: absolute;
-            right: 10px;
-            top: 4px;
-            font-size: 14px;
-            cursor: pointer;
-            background: #eee;
-            border-radius: 50%;
-            width: 22px;
-            height: 22px;
-            line-height: 22px;
-            text-align: center;
-            z-index: 10000;
-        }
-
-        .site-footer {
-            background: white;
-            border-top: 1px solid #ddd;
-            margin-top: 50px;
-            padding: 25px 0;
-        }
-
-        .footer-inner {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        @media (max-width: 900px) {
-            .cards {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .sticky-ad {
-                display: none;
-            }
-
-            body {
-                padding-bottom: 0;
-            }
-        }
+        :root { --purple:#4b008f; --purple-dark:#360066; --yellow:#fff200; --orange:#ff7a00; --cyan:#4deaff; --green:#76ff2f; --text:#222; --muted:#5b5b5b; --border:#ddd; --page:#f3f3f3; --white:#fff; }
+        * { box-sizing:border-box; }
+        html { scroll-behavior:smooth; }
+        body { font-family:Arial,sans-serif; margin:0; background:var(--page); color:var(--text); line-height:1.6; padding-bottom:90px; }
+        img { max-width:100%; }
+        a { color:var(--purple); }
+        .container { width:min(1100px,calc(100% - 40px)); margin:0 auto; }
+        .site-header { background:var(--purple); color:#fff; padding:18px 0; border-top:6px solid var(--orange); }
+        .site-header-inner { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px; }
+        .brand { display:flex; align-items:center; gap:14px; text-decoration:none; color:#fff; }
+        .brand img { height:78px; width:auto; display:block; }
+        .brand-title { font-size:2.05rem; font-weight:800; color:#ffe600; line-height:1.1; }
+        .brand-tagline { font-size:.95rem; color:var(--green); font-weight:700; margin-top:4px; }
+        .nav { display:flex; gap:22px; flex-wrap:wrap; }
+        .nav a { color:var(--cyan); text-decoration:none; font-weight:700; }
+        .nav a:hover,.nav a:focus { text-decoration:underline; }
+        .title-bar { background:var(--yellow); border-top:4px solid var(--orange); padding:22px 0; }
+        .title-bar h1 { margin:0; font-size:clamp(2rem,5vw,3rem); line-height:1.15; font-weight:800; }
+        .intro-section { background:#fff; border-bottom:1px solid var(--border); padding:26px 0; }
+        .intro-copy { max-width:850px; }
+        .intro-copy p { margin:0 0 12px; font-size:1.06rem; }
+        .intro-copy p:last-child { margin-bottom:0; }
+        .quick-links { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+        .quick-links a { display:inline-block; padding:9px 14px; border:1px solid var(--purple); border-radius:999px; text-decoration:none; font-weight:700; background:#faf7ff; }
+        .quick-links a:hover,.quick-links a:focus { background:var(--purple); color:#fff; }
+        .ad-wrap { margin:20px auto; text-align:center; min-height:90px; }
+        .section { padding:44px 0; }
+        .section-white { background:#fff; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+        .section-heading { max-width:780px; margin-bottom:24px; }
+        .section-heading h2 { margin:0 0 8px; font-size:clamp(1.6rem,4vw,2.2rem); line-height:1.2; }
+        .section-heading p { margin:0; color:var(--muted); }
+        .cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:28px; }
+        .card { background:#fff; border:1px solid var(--border); border-radius:8px; padding:20px; text-align:center; display:flex; flex-direction:column; box-shadow:0 2px 8px rgba(0,0,0,.04); }
+        .card h3 { margin:0 0 14px; font-size:1.25rem; line-height:1.25; }
+        .card img { width:100%; aspect-ratio:4/5; object-fit:contain; background:#fafafa; border:1px solid #ccc; margin-bottom:15px; }
+        .card p { font-size:.97rem; color:#333; margin:0 0 16px; flex-grow:1; }
+        .card a { display:inline-block; margin-top:auto; padding:12px 20px; background:var(--purple); color:#fff; text-decoration:none; font-weight:700; border-radius:4px; }
+        .card a:hover,.card a:focus { background:var(--purple-dark); }
+        .full-grid-ad { grid-column:1/-1; text-align:center; min-height:90px; }
+        .info-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; }
+        .info-card { background:#fff; border:1px solid var(--border); border-radius:8px; padding:24px; }
+        .info-card h3 { margin-top:0; margin-bottom:10px; }
+        .info-card p { margin-bottom:0; }
+        .steps { counter-reset:step; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px; margin:0; padding:0; list-style:none; }
+        .steps li { background:#faf7ff; border:1px solid #d9c7ef; border-radius:8px; padding:22px; }
+        .steps li::before { counter-increment:step; content:counter(step); display:grid; place-items:center; width:34px; height:34px; border-radius:50%; background:var(--purple); color:#fff; font-weight:800; margin-bottom:12px; }
+        .steps strong { display:block; margin-bottom:6px; }
+        .category-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+        .category-box { background:#fff; border:1px solid var(--border); border-left:6px solid var(--orange); padding:24px; border-radius:6px; }
+        .category-box h3 { margin-top:0; }
+        .category-box ul { margin-bottom:0; padding-left:20px; }
+        .category-box li+li { margin-top:6px; }
+        .faq-list { display:grid; gap:14px; }
+        details { background:#fff; border:1px solid var(--border); border-radius:6px; padding:0; }
+        summary { cursor:pointer; font-weight:700; padding:18px 20px; }
+        details p { margin:0; padding:0 20px 20px; color:#333; }
+        .resource-links { display:flex; flex-wrap:wrap; gap:12px; }
+        .resource-links a { display:inline-block; padding:11px 16px; background:#fff; border:1px solid var(--purple); border-radius:4px; font-weight:700; text-decoration:none; }
+        .resource-links a:hover,.resource-links a:focus { background:var(--purple); color:#fff; }
+        .site-footer { background:#fff; border-top:1px solid var(--border); padding:25px 0; }
+        .footer-inner { display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+        .sticky-ad { position:fixed; bottom:0; left:0; width:100%; background:#fff; border-top:1px solid #ddd; text-align:center; z-index:9999; padding:6px 0; min-height:90px; }
+        .sticky-ad .close-btn { position:absolute; right:10px; top:4px; font-size:14px; cursor:pointer; background:#eee; border-radius:50%; width:22px; height:22px; line-height:22px; text-align:center; z-index:10000; }
+        @media (max-width:900px) { .cards,.info-grid { grid-template-columns:1fr 1fr; } .steps { grid-template-columns:1fr 1fr; } }
+        @media (max-width:650px) { .container { width:min(100% - 28px,1100px); } .brand img { height:60px; } .brand-title { font-size:1.55rem; } .nav { gap:14px; } .cards,.info-grid,.steps,.category-grid { grid-template-columns:1fr; } .section { padding:34px 0; } }
+        @media (min-width:768px) { .sticky-ad { display:none; } body { padding-bottom:0; } }
     </style>
 
-    <script async
-    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js">
-    </script>
-    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
-
 <body>
-
 <header class="site-header">
     <div class="container site-header-inner">
         <a href="https://free4classrooms.com" class="brand">
             <img src="/static/free4classrooms-logo.png" alt="Free4Classrooms logo">
             <div>
                 <div class="brand-title">Free4Classrooms.com</div>
-                <div class="brand-tagline">Free Printable Worksheets for Kindergarten & Beyond</div>
+                <div class="brand-tagline">Free Printable Worksheets for Kindergarten &amp; Beyond</div>
             </div>
         </a>
-
-        <nav class="nav">
+        <nav class="nav" aria-label="Main navigation">
             <a href="https://free4classrooms.com">Home</a>
             <a href="https://free4classrooms.com/free-math-worksheets/">Math</a>
             <a href="https://free4classrooms.com/reading-worksheets/">Reading</a>
@@ -222,165 +136,125 @@
         </nav>
     </div>
 </header>
-
-<div class="title-bar">
-    <div class="container">
-        <h1>Worksheet Generator Tools</h1>
+<section class="title-bar">
+    <div class="container"><h1>{{ seo.h1 }}</h1></div>
+</section>
+<section class="intro-section">
+    <div class="container intro-copy">
+        <p>Create customized printable worksheets for math, handwriting, names, words, and early learning. Choose a generator, select the practice options your students need, and download a clean PDF.</p>
+        <p>These free tools are designed for teachers, parents, homeschool families, tutors, and intervention groups. No account is required, and you can make a new worksheet whenever students need additional practice.</p>
+        <div class="quick-links" aria-label="Worksheet generator categories">
+            <a href="#writing-generators">Writing &amp; Handwriting</a>
+            <a href="#math-generators">Math Generators</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#frequently-asked-questions">FAQ</a>
+        </div>
     </div>
+</section>
+<div class="container ad-wrap">
+    <ins class="adsbygoogle lazy-adsense" style="display:block" data-ad-client="ca-pub-6792544063337994" data-ad-slot="4011928352" data-ad-format="auto" data-full-width-responsive="true"></ins>
 </div>
-
-<div class="intro-section">
-    <div class="container">
-        <p class="subtitle">
-            Choose a worksheet generator below to create printable PDFs for math, names, sight words, and early writing practice.
-        </p>
-    </div>
-</div>
-
-<div class="container" style="margin: 20px auto; text-align:center; min-height: 90px;">
-    <ins class="adsbygoogle lazy-adsense"
-         style="display:block"
-         data-ad-client="ca-pub-6792544063337994"
-         data-ad-slot="4011928352"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-</div>
-
-<main class="container">
-    <div class="cards">
-
-        <div class="card">
-            <h2>Name Trace Generator</h2>
-            <img src="/static/example-name-trace.png" alt="Example name tracing worksheet">
-            <p>
-                Create classic name tracing worksheets with dashed lines.
-                Perfect for preschool and kindergarten handwriting practice.
-            </p>
-            <a href="/name-trace/">Use Name Trace Generator</a>
+<main>
+    <section class="section" id="writing-generators">
+        <div class="container">
+            <div class="section-heading"><h2>Writing and Handwriting Worksheet Generators</h2><p>Make personalized tracing and writing practice for names, sight words, CVC words, spelling words, vocabulary, and other short words.</p></div>
+            <div class="cards">
+                <article class="card"><h3>Name Trace Generator</h3><img src="/static/example-name-trace.png" alt="Example personalized name tracing worksheet"><p>Create classic name tracing worksheets with dashed letters and handwriting lines. Useful for preschool, transitional kindergarten, and kindergarten practice.</p><a href="/name-trace/">Use Name Trace Generator</a></article>
+                <article class="card"><h3>Name and Word Worksheet Generator</h3><img src="/static/example-color-trace.png" alt="Example personalized name and word worksheet"><p>Create worksheets with writing, tracing, and coloring sections. Use names, sight words, CVC words, spelling words, or short vocabulary terms.</p><a href="/color-trace/">Use Word Generator</a></article>
+            </div>
         </div>
-
-        <div class="card">
-            <h2>Name & Word Worksheet Generator</h2>
-            <img src="/static/example-color-trace.png" alt="Example name and word worksheet">
-            <p>
-                Create worksheets with writing, tracing, and coloring sections.
-                Works for names, sight words, and CVC words.
-            </p>
-            <a href="/color-trace/">Use Word Generator</a>
+    </section>
+    <section class="section section-white" id="math-generators">
+        <div class="container">
+            <div class="section-heading"><h2>Free Math Worksheet Generators</h2><p>Build targeted arithmetic practice for addition, subtraction, multiplication, and division. Select the difficulty and worksheet style, then create a printable PDF.</p></div>
+            <div class="cards">
+                <article class="card"><h3>Addition Worksheet Generator</h3><img src="/static/example-2-digit-addition.png?v=beb7560" alt="Example printable addition worksheet"><p>Create 1-digit and 2-digit addition worksheets with regrouping options, printer-friendly layouts, and focused math fluency practice.</p><a href="/addition-generator/">Use Addition Generator</a></article>
+                <article class="card"><h3>Subtraction Worksheet Generator</h3><img src="/static/example-2-digit-subtraction.png" alt="Example printable subtraction worksheet"><p>Create 1-digit and 2-digit subtraction worksheets with mixed, no-regrouping, or regrouping practice.</p><a href="/subtraction-generator/">Use Subtraction Generator</a></article>
+                <article class="card"><h3>Multiplication Facts Generator</h3><img src="/static/example-multiplication-facts.png" alt="Example printable multiplication facts worksheet"><p>Practice multiplication facts from 0 through 12. Choose a single times table or mixed facts in horizontal or vertical layouts.</p><a href="/multiplication-generator/">Use Multiplication Generator</a></article>
+                <div class="full-grid-ad"><ins class="adsbygoogle lazy-adsense" style="display:block" data-ad-client="ca-pub-6792544063337994" data-ad-slot="4011928352" data-ad-format="auto" data-full-width-responsive="true"></ins></div>
+                <article class="card"><h3>Division Facts Generator</h3><img src="/static/example-division-facts.png?v=3" alt="Example printable division facts worksheet"><p>Create division fact worksheets without remainders. Choose horizontal equations or long-division grid layouts.</p><a href="/division-generator/">Use Division Generator</a></article>
+                <article class="card"><h3>2-Digit Multiplication Generator</h3><img src="/static/2-digit-example-multiplication-mixed-color-12-vertical.png" alt="Example printable 2-digit multiplication worksheet"><p>Create 2-digit by 2-digit multiplication worksheets with vertical problems, regrouping choices, answer keys, and worked solutions.</p><a href="/2-digit-multiplication-generator/">Use 2-Digit Generator</a></article>
+            </div>
         </div>
-
-        <div class="card">
-            <h2>Addition Worksheet Generator</h2>
-            <img src="/static/example-2-digit-addition.png?v=beb7560" alt="Example addition worksheet">
-            <p>
-                Create printable addition worksheets for 1-digit and 2-digit practice.
-                Includes regrouping options and clean layouts for math fluency.
-            </p>
-            <a href="/addition-generator/">Use Addition Generator</a>
+    </section>
+    <section class="section" id="how-it-works">
+        <div class="container">
+            <div class="section-heading"><h2>How to Create a Printable Worksheet</h2><p>Each tool follows the same simple process, so you can create focused practice in only a few steps.</p></div>
+            <ol class="steps">
+                <li><strong>Choose a generator</strong>Select the math, name, or word worksheet that matches the skill students need to practice.</li>
+                <li><strong>Select the options</strong>Pick the difficulty, problem type, layout, word, name, or worksheet style.</li>
+                <li><strong>Generate the worksheet</strong>The tool creates a new printable worksheet based on your choices.</li>
+                <li><strong>Preview and download</strong>Review the worksheet and download the PDF for printing.</li>
+            </ol>
         </div>
-
-        <div style="grid-column: 1 / -1; text-align:center; min-height: 90px;">
-            <ins class="adsbygoogle lazy-adsense"
-                 style="display:block"
-                 data-ad-client="ca-pub-6792544063337994"
-                 data-ad-slot="4011928352"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
+    </section>
+    <section class="section section-white">
+        <div class="container">
+            <div class="section-heading"><h2>Ways to Use the Worksheet Generators</h2><p>The same generator can support whole-class lessons, small groups, tutoring, home practice, and independent review.</p></div>
+            <div class="info-grid">
+                <article class="info-card"><h3>Differentiate Practice</h3><p>Create easier and more challenging versions of the same skill so students can work at an appropriate level.</p></article>
+                <article class="info-card"><h3>Prepare Math Centers</h3><p>Generate fresh arithmetic practice for centers, early finishers, intervention groups, or morning work.</p></article>
+                <article class="info-card"><h3>Personalize Writing</h3><p>Use student names, sight words, CVC words, spelling words, and vocabulary terms for meaningful handwriting practice.</p></article>
+                <article class="info-card"><h3>Support Tutoring</h3><p>Make a focused worksheet during a tutoring session instead of searching for a page that almost matches the lesson.</p></article>
+                <article class="info-card"><h3>Send Home Review</h3><p>Create printable practice for families without requiring students to sign in or use a specific device.</p></article>
+                <article class="info-card"><h3>Reduce Repetition</h3><p>Generate a new version when students need more practice without reusing the exact same problems.</p></article>
+            </div>
         </div>
-
-        <div class="card">
-            <h2>Subtraction Worksheet Generator</h2>
-            <img src="/static/example-2-digit-subtraction.png" alt="Example subtraction worksheet">
-            <p>
-                Create printable subtraction worksheets for 1-digit and 2-digit practice.
-                Includes regrouping options and clean layouts for math fluency.
-            </p>
-            <a href="/subtraction-generator/">Use Subtraction Generator</a>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="section-heading"><h2>Worksheet Categories</h2><p>Start with the interactive generators here, or browse the larger Free4Classrooms worksheet collections.</p></div>
+            <div class="category-grid">
+                <div class="category-box"><h3>Math Practice</h3><ul><li>Addition and subtraction fluency</li><li>Regrouping practice</li><li>Multiplication facts and times tables</li><li>Division facts and long division</li><li>2-digit multiplication</li></ul></div>
+                <div class="category-box"><h3>Early Literacy and Writing</h3><ul><li>Name tracing</li><li>Letter formation</li><li>Sight word writing</li><li>CVC word practice</li><li>Spelling and vocabulary review</li></ul></div>
+            </div>
         </div>
-
-        <div class="card">
-            <h2>Multiplication Facts Generator</h2>
-            <img src="/static/example-multiplication-facts.png" alt="Example multiplication facts worksheet">
-            <p>
-                Create printable multiplication facts worksheets for numbers 0–12.
-                Choose one times table or mixed facts with horizontal or vertical layouts.
-            </p>
-            <a href="/multiplication-generator/">Use Multiplication Generator</a>
+    </section>
+    <section class="section section-white" id="frequently-asked-questions">
+        <div class="container">
+            <div class="section-heading"><h2>Frequently Asked Questions</h2><p>Answers to common questions about creating and printing worksheets.</p></div>
+            <div class="faq-list">
+                <details><summary>Are the worksheet generators free?</summary><p>Yes. The worksheet generators are free to use, and you do not need to create an account.</p></details>
+                <details><summary>Do the generators create printable PDF worksheets?</summary><p>Yes. After you choose the worksheet options, the generator creates a PDF that you can preview, download, and print.</p></details>
+                <details><summary>Can teachers use these worksheets in the classroom?</summary><p>Yes. Teachers can use the generated worksheets for classroom instruction, centers, intervention, homework, tutoring, and other educational practice.</p></details>
+                <details><summary>Can parents and homeschool families use the generators?</summary><p>Yes. The tools are designed to be simple for families as well as teachers. Choose a skill, create the worksheet, and print it for home practice.</p></details>
+                <details><summary>Can I make more than one version of a worksheet?</summary><p>Yes. You can generate another worksheet whenever students need additional practice or a different set of problems.</p></details>
+                <details><summary>Are answer keys included?</summary><p>Some generators include answer pages or worked solutions. The available options are explained on each generator page.</p></details>
+            </div>
         </div>
-
-        <div class="card">
-            <h2>Division Facts Generator</h2>
-            <img src="/static/example-division-facts.png?v=3" alt="Example division facts worksheet">
-            <p>
-                Create printable division worksheets with no remainders.
-                Includes horizontal equations and long division grid layouts for clear student practice.
-            </p>
-            <a href="/division-generator/">Use Division Generator</a>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="section-heading"><h2>More Free Printable Worksheets</h2><p>Browse additional worksheet collections, including ready-made math, reading, and sight word activities.</p></div>
+            <div class="resource-links">
+                <a href="https://free4classrooms.com/free-math-worksheets/">Free Math Worksheets</a>
+                <a href="https://free4classrooms.com/reading-worksheets/">Reading Worksheets</a>
+                <a href="https://free4classrooms.com/free-printable-sight-word-worksheets/">Sight Word Worksheets</a>
+                <a href="https://free4classrooms.com/">Free4Classrooms Home</a>
+            </div>
         </div>
-
-        <div class="card">
-            <h2>2-Digit Multiplication Generator</h2>
-            <img src="/static/2-digit-example-multiplication-mixed-color-12-vertical.png" alt="Example 2-digit multiplication worksheet">
-            <p>
-                Create printable 2-digit by 2-digit multiplication worksheets with vertical problems,
-                regrouping practice, answer keys, and step-by-step worked solutions.
-            </p>
-            <a href="/2-digit-multiplication-generator/">Use 2-Digit Generator</a>
-        </div>
-
-    </div>
+    </section>
 </main>
-
-<footer class="site-footer">
-    <div class="container footer-inner">
-        <div>© {{ year }} Free4Classrooms.com</div>
-        <div>
-            <a href="https://free4classrooms.com/terms-of-use/">Terms of Use</a>
-        </div>
-    </div>
-</footer>
-
-<div class="sticky-ad" id="stickyAd">
-    <div class="close-btn" onclick="document.getElementById('stickyAd').style.display='none'">×</div>
-    <ins class="adsbygoogle lazy-adsense"
-         style="display:block"
-         data-ad-client="ca-pub-6792544063337994"
-         data-ad-slot="4011928352"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-</div>
-
+<footer class="site-footer"><div class="container footer-inner"><div>© {{ year }} Free4Classrooms.com</div><div><a href="https://free4classrooms.com/terms-of-use/">Terms of Use</a></div></div></footer>
+<div class="sticky-ad" id="stickyAd"><div class="close-btn" role="button" tabindex="0" aria-label="Close advertisement" onclick="document.getElementById('stickyAd').style.display='none'">×</div><ins class="adsbygoogle lazy-adsense" style="display:block" data-ad-client="ca-pub-6792544063337994" data-ad-slot="4011928352" data-ad-format="auto" data-full-width-responsive="true"></ins></div>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const ads = document.querySelectorAll(".lazy-adsense");
-
     const loadAd = (ad) => {
         if (ad.dataset.loaded === "true") return;
         ad.dataset.loaded = "true";
-
-        try {
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        } catch (e) {
-            console.warn("AdSense load error:", e);
-        }
+        try { (adsbygoogle = window.adsbygoogle || []).push({}); }
+        catch (e) { console.warn("AdSense load error:", e); }
     };
-
     if ("IntersectionObserver" in window) {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    loadAd(entry.target);
-                    observer.unobserve(entry.target);
-                }
+                if (entry.isIntersecting) { loadAd(entry.target); observer.unobserve(entry.target); }
             });
         }, { rootMargin: "300px 0px" });
-
         ads.forEach(ad => observer.observe(ad));
-    } else {
-        ads.forEach(loadAd);
-    }
+    } else { ads.forEach(loadAd); }
 });
 </script>
-
 </body>
 </html>

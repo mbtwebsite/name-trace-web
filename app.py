@@ -6,6 +6,7 @@ import subprocess
 from pathlib import Path
 from datetime import datetime
 
+from seo_content import SEO_PAGES
 import fitz
 import requests
 from flask import (
@@ -388,6 +389,7 @@ def render_multiplication_generator_page():
             success=success,
             pdf_filename=pdf_filename,
             preview_filename=preview_filename,
+            seo=SEO_PAGES["multiplication"],
             turnstile_site_key=TURNSTILE_SITE_KEY,
         )
     )
@@ -691,7 +693,11 @@ def render_subtraction_generator_page():
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return render_template(
+        "index.html",
+        seo=SEO_PAGES["hub"],
+        year=datetime.now().year,
+    )
 
 
 @app.route("/name-trace/", methods=["GET", "POST"])
